@@ -12,21 +12,21 @@
         extend: {
           colors: {
             amicii: {
-              black: "#050505",
+              black: "#000000",
               ink: "#0a0908",
               charcoal: "#141210",
-              card: "#171412",
-              gold: "#b8965a",
-              goldbright: "#d4b87a",
+              card: "#1c1c1c",
+              gold: "#ff9d00",
+              goldbright: "#ffd700",
               goldsoft: "#e8dcc4",
               cream: "#f4eee4",
-              tomato: "#c03628",
-              tomatodark: "#9a2a20",
+              tomato: "#ff4d00",
+              tomatodark: "#d93d00",
             },
           },
           fontFamily: {
             display: ['"Playfair Display"', "Georgia", "serif"],
-            body: ['Montserrat', "system-ui", "sans-serif"],
+            body: ['Poppins', "system-ui", "sans-serif"],
           },
           backgroundImage: {
             "stone-dark": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E\"), linear-gradient(180deg, #0a0a0a 0%25, #141210 50%25, #0a0a0a 100%25)",
@@ -37,23 +37,23 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --gold: #b8965a;
-      --gold-bright: #d4b87a;
+      --gold: #ff9d00;
+      --gold-bright: #ffd700;
       --cream: #f4eee4;
-      --tomato: #c03628;
-      --tomato-dark: #9a2a20;
+      --tomato: #ff4d00;
+      --tomato-dark: #d93d00;
     }
     body {
-      font-family: Montserrat, system-ui, sans-serif;
+      font-family: Poppins, system-ui, sans-serif;
     }
     .font-display {
       font-family: "Playfair Display", Georgia, serif;
     }
     .brick-bg {
-      background-color: #050505;
+      background-color: #000000;
       background-image:
         linear-gradient(180deg, rgba(5, 5, 5, 0.92) 0%, rgba(14, 10, 8, 0.96) 45%, rgba(5, 5, 5, 0.94) 100%),
         url("data:image/svg+xml,%3Csvg width='72' height='36' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='72' height='36' fill='%23080706'/%3E%3Cpath d='M0 0h34v17H0zm38 0h34v17H38zM0 19h17v17H0m21 0h17v17H21m21 0h17v17H42m21 0h13v17H63' fill='none' stroke='%231a1512' stroke-width='0.85' opacity='0.55'/%3E%3Cpath d='M36 0v36M0 18h72' stroke='%2312100e' stroke-width='0.5' opacity='0.35'/%3E%3C/svg%3E");
@@ -61,17 +61,17 @@
       background-attachment: fixed;
     }
     .btn-amicii-primary {
-      background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 52%, #9a7d48 100%);
-      color: #080605;
-      border: 1px solid rgba(184, 149, 90, 0.45);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+      background: linear-gradient(180deg, #ff6b1a 0%, var(--tomato) 54%, var(--tomato-dark) 100%);
+      color: #ffffff;
+      border: 1px solid rgba(255, 119, 42, 0.65);
+      box-shadow: 0 6px 20px rgba(255, 77, 0, 0.28), 0 0 12px rgba(255, 157, 0, 0.22);
       transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, transform 0.2s ease;
     }
     .btn-amicii-primary:hover {
-      background: linear-gradient(180deg, #d4483a 0%, var(--tomato) 50%, var(--tomato-dark) 100%);
+      background: linear-gradient(180deg, #ff8140 0%, #ff4d00 50%, #d73a00 100%);
       color: var(--cream);
-      border-color: rgba(255, 120, 100, 0.35);
-      box-shadow: 0 6px 22px rgba(192, 54, 40, 0.4);
+      border-color: rgba(255, 130, 70, 0.7);
+      box-shadow: 0 10px 28px rgba(255, 77, 0, 0.45), 0 0 18px rgba(255, 77, 0, 0.32);
     }
     .btn-amicii-primary:active {
       transform: scale(0.98);
@@ -127,11 +127,26 @@
     }
     #fomo-mins.fomo-tick,
     #fomo-plural.fomo-tick {
-      opacity: 0.5;
+      opacity: 0.55;
+      animation: fomoPulse 0.8s ease-in-out infinite;
+      color: #ff4d00;
+      text-shadow: 0 0 8px rgba(255, 77, 0, 0.8);
+    }
+    @keyframes fomoPulse {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
     }
     #fomo-mins,
     #fomo-plural {
       transition: opacity 0.3s ease, color 0.2s ease;
+    }
+    .status-open-neon {
+      color: #78ff8b !important;
+      text-shadow: 0 0 8px rgba(120, 255, 139, 0.9), 0 0 18px rgba(120, 255, 139, 0.45);
+    }
+    .status-closed-red {
+      color: #ff6a53 !important;
+      text-shadow: 0 0 8px rgba(255, 90, 70, 0.65);
     }
   </style>
   <!-- Horario: 19:00–23:00 local (navegador) -->
@@ -169,9 +184,9 @@
         <div class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-20 sm:px-28">
           <a href="#" class="pointer-events-auto flex items-center justify-center transition-opacity hover:opacity-95">
             <img
-              src="assets/logoamicci.png"
+              src="assets/logoamicci_1.png"
               alt="AMICII Pizzería Artigianale"
-              class="h-16 w-auto max-w-[220px] object-contain sm:h-20 md:h-24"
+              class="h-20 w-auto max-w-[260px] object-contain sm:h-24 md:h-32"
               width="220"
               height="96"
             />
@@ -232,12 +247,12 @@
 
       <section id="menu" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="font-display text-3xl font-bold text-amicii-goldsoft sm:text-4xl">Nuestro menú</h2>
+          <h2 class="font-display text-3xl font-bold text-amicii-goldsoft sm:text-4xl">Nuestras Pizzas Clásicas</h2>
           <p class="mt-3 text-sm font-medium text-amicii-cream/80">Cada plato con nombre, descripción, precio y un clic al carrito</p>
         </div>
         <div class="mt-16 space-y-20">
           <div>
-            <h3 class="font-display text-2xl font-semibold text-amicii-cream sm:text-3xl">Nuestras pizzas</h3>
+            <h3 class="font-display text-2xl font-semibold text-amicii-cream sm:text-3xl">Nuestras Pizzas Clásicas</h3>
             <p class="mt-2 text-sm font-medium text-amicii-cream/85">Clásicas, abundantes muzza y cocción al punto.</p>
             <div id="grid-pizzas" class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"></div>
           </div>
@@ -321,7 +336,7 @@
   >
     <div
       id="chat-panel"
-      class="hidden w-full max-w-sm overflow-hidden rounded-2xl border border-amicii-gold/35 bg-amicii-card/95 shadow-2xl shadow-black/50 backdrop-blur-md"
+      class="hidden w-full max-w-sm overflow-hidden rounded-2xl border border-amicii-gold/35 bg-[#1c1c1c] shadow-2xl shadow-black/50 backdrop-blur-md"
     >
       <div class="flex items-center gap-3 border-b border-amicii-gold/25 bg-amicii-black/70 px-4 py-3">
         <div class="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border-2 border-amicii-gold/50 bg-amicii-black">
@@ -603,12 +618,16 @@
       hSpan.textContent = open
         ? "🟢 Abierto ahora (Cierra 23:00 hs)"
         : "🔴 Cerrado (Abre 19:00 hs)";
+      hSpan.classList.toggle("status-open-neon", open);
+      hSpan.classList.toggle("status-closed-red", !open);
     }
     const fSpan = document.querySelector("#hours-status-footer span");
     if (fSpan) {
       fSpan.textContent = open
         ? "🟢 Abierto ahora (Cierra 23:00 hs)"
         : "🔴 Cerrado (Abre 19:00 hs)";
+      fSpan.classList.toggle("status-open-neon", open);
+      fSpan.classList.toggle("status-closed-red", !open);
     }
     const btnWa = document.getElementById("btn-whatsapp");
     if (btnWa) {
@@ -828,8 +847,8 @@
   function renderProductCard(p) {
     const isPizza = p.category === "pizza";
     const cardClass = isPizza
-      ? "pizza-card group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/25 bg-amicii-card/95 shadow-lg shadow-black/30 transition hover:border-amicii-goldbright/50 hover:shadow-amicii-tomato/10"
-      : "group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/25 bg-amicii-card/95 shadow-lg shadow-black/30 transition hover:border-amicii-goldbright/50 hover:shadow-amicii-tomato/10";
+      ? "pizza-card group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/30 bg-[#1c1c1c] shadow-lg shadow-black/35 ring-1 ring-inset ring-amicii-gold/15 transition hover:border-amicii-goldbright/60 hover:shadow-amicii-tomato/20"
+      : "group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/30 bg-[#1c1c1c] shadow-lg shadow-black/35 ring-1 ring-inset ring-amicii-gold/15 transition hover:border-amicii-goldbright/60 hover:shadow-amicii-tomato/20";
     const imgClass = isPizza
       ? "pizza-card-image h-full w-full object-cover"
       : "h-full w-full object-cover";
@@ -843,10 +862,10 @@
           <h4 class="font-display text-lg font-bold text-amicii-goldsoft">${p.name}</h4>
           <p class="mt-2 flex-1 text-sm font-medium leading-relaxed text-amicii-cream">${p.desc}</p>
           <div class="mt-4 flex items-end justify-between gap-3">
-            <span class="text-lg font-bold text-amicii-goldbright">${formatMoney(p.price)}</span>
+            <span class="text-lg font-bold text-amicii-goldbright drop-shadow-[0_0_8px_rgba(255,215,0,0.65)]">${formatMoney(p.price)}</span>
             <button
               type="button"
-              class="add-to-cart btn-amicii-primary inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide"
+              class="add-to-cart btn-amicii-primary inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide shadow-[0_0_10px_rgba(255,77,0,0.4)]"
               data-id="${p.id}"
             >Agregar</button>
           </div>
