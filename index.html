@@ -737,6 +737,7 @@
   /** Carrito: localStorage */
   const LS_KEY = "amicii-cart";
   const LS_HORA = "amicii-reserva-hora";
+  const LS_CHAT_SEEN = "amicii-chat-seen";
   /** Código de país + número sin + ni 0 (ej. Argentina: 54 + sin 0 del área) */
   const WHATSAPP_E164 = "5491112345678";
   let lastFomoMinuteVal = -1;
@@ -1471,10 +1472,14 @@
 
   const chatOpen = { value: false };
   const WELCOME_OPEN =
-    "¡Benvenuti a AMICII! Soy su guía pizzero. ¿Buscás una Pizza clásica o te gustaría probar nuestros Calzones artesanales?";
+    "¡Hola! Soy el Maestro de AMICII. ¿Hoy sale una pizza clásica o te tienta probar uno de nuestros calzones artesanales?";
+  const WELCOME_OPEN_ALT =
+    "¿Buscás algo suave para compartir o una explosión de sabor con mucho pepperoni?";
+  const WELCOME_RETURNING =
+    "¡Qué bueno verte de nuevo! ¿Te quedaste con ganas de otra porción o probamos algo distinto hoy?";
   const WELCOME_CLOSED =
-    "¡Benvenuti! Actualmente nuestra cocina está cerrada. Abrimos de 19:00 a 23:00 hs. ¿Te gustaría realizar una reserva ahora para que tu pedido sea entregado apenas abramos a las 19:00?";
-  const TIP = "Tip AMICII: si llevás 2 Pizzas, el Calzone tiene 20% de descuento.";
+    "¡Benvenuti! El horno descansa por ahora y vuelve a encenderse de 19:00 a 23:00 hs. Si querés, dejamos tu pedido programado para que salga del horno apenas abrimos.";
+  const TIP = "Toque de la casa: con 2 pizzas, tus calzones llevan 20% de descuento.";
 
   function appendChatMessage(text, fromBot) {
     const el = document.getElementById("chat-messages");
@@ -1483,6 +1488,68 @@
       ? "rounded-xl rounded-bl-sm border border-amicii-gold/30 bg-amicii-card/90 px-3 py-2 text-left font-medium text-amicii-cream shadow-sm"
       : "ml-8 rounded-xl rounded-br-sm border border-amicii-gold/20 bg-amicii-black/60 px-3 py-2 text-left font-medium text-amicii-cream";
     row.textContent = text;
+    el.appendChild(row);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function appendBotTypingMessage(text, delayMs = 650) {
+    const el = document.getElementById("chat-messages");
+    const typing = document.createElement("div");
+    typing.className =
+      "chat-bubble-typing rounded-xl rounded-bl-sm border border-amicii-gold/25 bg-amicii-card/70 px-3 py-2 text-left font-medium text-amicii-cream/85";
+    typing.textContent = "Maestro amasando";
+    el.appendChild(typing);
+    el.scrollTop = el.scrollHeight;
+    setTimeout(() => {
+      typing.remove();
+      appendChatMessage(text, true);
+    }, delayMs);
+  }
+
+  function chefReplyByIntent(userText) {
+    const txt = (userText || "").toLowerCase();
+    if (/picante|pepperoni|fuerte|intenso/.test(txt)) {
+      return "Si querés picante, andá por la Pizza Pepperoni: sale del horno con un toque de aceite de oliva que levanta todo el sabor.";
+    }
+    if (/contundente|abundante|llenador|hambre|potente/.test(txt)) {
+      return "Para algo contundente, los calzones artesanales son tu jugada: masa artesanal, relleno generoso y toque de la casa.";
+    }
+    return "Si es tu primera vez en AMICII, la Doble Muzzarella nunca falla, ¡es la reina de la casa!";
+  }
+
+  function appendSmartChatActions() {
+    const el = document.getElementById("chat-messages");
+    if (el.querySelector("[data-smart-actions]")) return;
+    const row = document.createElement("div");
+    row.setAttribute("data-smart-actions", "1");
+    row.className = "mt-2 flex flex-wrap gap-2";
+    const mkBtn = (label, isPrimary) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = isPrimary
+        ? "btn-amicii-primary rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wide"
+        : "btn-amicii-outline rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wide";
+      b.textContent = label;
+      return b;
+    };
+    const spicy = mkBtn("Quiero algo picante", true);
+    spicy.addEventListener("click", () => {
+      appendChatMessage("Quiero algo picante.", false);
+      appendBotTypingMessage(chefReplyByIntent("picante"), 760);
+    });
+    const strong = mkBtn("Busco algo contundente", false);
+    strong.addEventListener("click", () => {
+      appendChatMessage("Busco algo contundente.", false);
+      appendBotTypingMessage(chefReplyByIntent("contundente"), 760);
+    });
+    const unsure = mkBtn("No me decido", false);
+    unsure.addEventListener("click", () => {
+      appendChatMessage("No me decido todavía.", false);
+      appendBotTypingMessage(chefReplyByIntent(""), 760);
+    });
+    row.appendChild(spicy);
+    row.appendChild(strong);
+    row.appendChild(unsure);
     el.appendChild(row);
     el.scrollTop = el.scrollHeight;
   }
@@ -1505,15 +1572,15 @@
     const b1 = mkBtn("Sí, quiero reservar", true);
     b1.addEventListener("click", () => {
       appendChatMessage("Sí, quiero reservar", false);
-      appendChatMessage(
-        "¡Perfecto! Elegí tus platos; al finalizar, tocá “Reservar para las 19:00” en el checkout. Tu pedido queda listo para el arranque del servicio. Ottimo.",
-        true
+      appendBotTypingMessage(
+        "¡Perfecto! Elegí tus especialidades; al finalizar, tocá “Reservar para las 19:00” en el checkout. Tu pedido queda listo para salir del horno al abrir. Ottimo.",
+        760
       );
     });
-    const b2 = mkBtn("Solo miro el menú", false);
+    const b2 = mkBtn("Solo miro especialidades", false);
     b2.addEventListener("click", () => {
-      appendChatMessage("Solo miro el menú, gracias", false);
-      appendChatMessage("Cuando quieras, estamos de 19:00 a 23:00. ¡A disfrutar! Buon appetit.", true);
+      appendChatMessage("Solo miro especialidades, gracias", false);
+      appendBotTypingMessage("Cuando quieras, acá te esperamos con masa artesanal y mucho sabor. Buon appetit.", 760);
     });
     row.appendChild(b1);
     row.appendChild(b2);
@@ -1524,14 +1591,29 @@
   function runInitialChatMessages() {
     if (window.__amiciiChatInit) return;
     window.__amiciiChatInit = true;
-    if (isKitchenOpen()) {
-      appendChatMessage(WELCOME_OPEN, true);
-      setTimeout(() => appendChatMessage(TIP, true), 500);
-    } else {
-      appendChatMessage(WELCOME_CLOSED, true);
-      setTimeout(() => appendChatMessage(TIP, true), 500);
-      setTimeout(() => appendClosedChatActions(), 900);
+    let hasSeenChat = false;
+    try {
+      hasSeenChat = localStorage.getItem(LS_CHAT_SEEN) === "1";
+    } catch (e) {}
+    if (hasSeenChat) {
+      appendBotTypingMessage(WELCOME_RETURNING, 620);
+      setTimeout(() => appendBotTypingMessage(WELCOME_OPEN_ALT, 700), 780);
+      setTimeout(() => appendSmartChatActions(), 1300);
+      return;
     }
+    if (isKitchenOpen()) {
+      appendBotTypingMessage(WELCOME_OPEN, 620);
+      setTimeout(() => appendBotTypingMessage(WELCOME_OPEN_ALT, 700), 760);
+      setTimeout(() => appendBotTypingMessage(TIP, 680), 1500);
+      setTimeout(() => appendSmartChatActions(), 2100);
+    } else {
+      appendBotTypingMessage(WELCOME_CLOSED, 620);
+      setTimeout(() => appendBotTypingMessage(TIP, 680), 1100);
+      setTimeout(() => appendClosedChatActions(), 1600);
+    }
+    try {
+      localStorage.setItem(LS_CHAT_SEEN, "1");
+    } catch (e) {}
   }
 
   function showChat() {
@@ -1550,6 +1632,7 @@
   });
   document.getElementById("btn-close-chat").addEventListener("click", () => {
     document.getElementById("chat-panel").classList.add("hidden");
+    chatOpen.value = false;
   });
 
   const horaInit = document.getElementById("cart-reserva-hora");
