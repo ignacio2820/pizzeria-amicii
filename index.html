@@ -758,7 +758,7 @@
     Object.entries(SFX).forEach(([key, src]) => {
       const audio = new Audio(src);
       audio.preload = "auto";
-      audio.volume = key === "ding" ? 0.24 : 0.18;
+      audio.volume = key === "ding" ? 0.5 : key === "remove" ? 0.3 : 0.18;
       audioPool[key] = audio;
     });
     audioReady = true;
