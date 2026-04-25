@@ -130,7 +130,7 @@
     const proceed = document.getElementById("btn-proceed-checkout");
     if (proceed) {
       proceed.textContent = open
-        ? (proceed.getAttribute("data-label-open") || "Ir al checkout")
+        ? (proceed.getAttribute("data-label-open") || "IR A LA RESERVA")
         : (proceed.getAttribute("data-label-closed") || "Completar reserva");
     }
     const primaryCta = document.getElementById("btn-primary-cta");

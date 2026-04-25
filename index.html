@@ -580,10 +580,10 @@
         type="button"
         id="btn-proceed-checkout"
         class="btn-amicii-primary w-full rounded-full py-3.5 text-sm font-bold uppercase tracking-wide"
-        data-label-open="Ir al checkout"
+        data-label-open="IR A LA RESERVA"
         data-label-closed="Completar reserva"
       >
-        Ir al checkout
+        IR A LA RESERVA
       </button>
       <button
         type="button"
@@ -852,7 +852,7 @@
     const proceed = document.getElementById("btn-proceed-checkout");
     if (proceed) {
       proceed.textContent = open
-        ? (proceed.getAttribute("data-label-open") || "Ir a la reserva")
+        ? (proceed.getAttribute("data-label-open") || "IR A LA RESERVA")
         : (proceed.getAttribute("data-label-closed") || "Completar reserva");
     }
     const primaryCta = document.getElementById("btn-primary-cta");
