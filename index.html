@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Amicii Pizzería — Pizzas y calzones artesanales. Pedí por WhatsApp." />
-  <title>Amicii Pizzería | Arte & Sabor</title>
+  <meta name="description" content="AMICII Pizzería Artigianale — Pizzas y calzones artesanales. Pedí por WhatsApp." />
+  <title>AMICII Pizzería Artigianale | Arte & Sabor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -12,11 +12,16 @@
         extend: {
           colors: {
             amicii: {
-              black: "#0a0a0a",
-              charcoal: "#121212",
-              gold: "#c9a96e",
-              goldsoft: "#d4bc8c",
-              cream: "#f5f0e8",
+              black: "#050505",
+              ink: "#0a0908",
+              charcoal: "#141210",
+              card: "#171412",
+              gold: "#b8965a",
+              goldbright: "#d4b87a",
+              goldsoft: "#e8dcc4",
+              cream: "#f4eee4",
+              tomato: "#c03628",
+              tomatodark: "#9a2a20",
             },
           },
           fontFamily: {
@@ -35,8 +40,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --gold: #c9a96e;
-      --cream: #f5f0e8;
+      --gold: #b8965a;
+      --gold-bright: #d4b87a;
+      --cream: #f4eee4;
+      --tomato: #c03628;
+      --tomato-dark: #9a2a20;
     }
     body {
       font-family: Montserrat, system-ui, sans-serif;
@@ -44,15 +52,41 @@
     .font-display {
       font-family: "Playfair Display", Georgia, serif;
     }
-    .wood-stone-bg {
-      background-color: #0a0a0a;
+    .brick-bg {
+      background-color: #050505;
       background-image:
-        url("https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=1920&q=80"),
-        linear-gradient(180deg, rgba(10, 10, 10, 0.97) 0%, rgba(18, 16, 14, 0.95) 50%, rgba(10, 10, 10, 0.97) 100%);
-      background-size: cover;
-      background-position: center;
+        linear-gradient(180deg, rgba(5, 5, 5, 0.92) 0%, rgba(14, 10, 8, 0.96) 45%, rgba(5, 5, 5, 0.94) 100%),
+        url("data:image/svg+xml,%3Csvg width='72' height='36' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='72' height='36' fill='%23080706'/%3E%3Cpath d='M0 0h34v17H0zm38 0h34v17H38zM0 19h17v17H0m21 0h17v17H21m21 0h17v17H42m21 0h13v17H63' fill='none' stroke='%231a1512' stroke-width='0.85' opacity='0.55'/%3E%3Cpath d='M36 0v36M0 18h72' stroke='%2312100e' stroke-width='0.5' opacity='0.35'/%3E%3C/svg%3E");
+      background-size: auto, 72px 36px;
       background-attachment: fixed;
-      background-blend-mode: multiply;
+    }
+    .btn-amicii-primary {
+      background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 52%, #9a7d48 100%);
+      color: #080605;
+      border: 1px solid rgba(184, 149, 90, 0.45);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+      transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, transform 0.2s ease;
+    }
+    .btn-amicii-primary:hover {
+      background: linear-gradient(180deg, #d4483a 0%, var(--tomato) 50%, var(--tomato-dark) 100%);
+      color: var(--cream);
+      border-color: rgba(255, 120, 100, 0.35);
+      box-shadow: 0 6px 22px rgba(192, 54, 40, 0.4);
+    }
+    .btn-amicii-primary:active {
+      transform: scale(0.98);
+    }
+    .btn-amicii-outline {
+      border: 1px solid rgba(184, 149, 90, 0.45);
+      color: var(--cream);
+      background: rgba(20, 18, 16, 0.65);
+      transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    }
+    .btn-amicii-outline:hover {
+      border-color: var(--tomato);
+      color: var(--cream);
+      background: rgba(192, 54, 40, 0.15);
+      box-shadow: 0 0 0 1px rgba(192, 54, 40, 0.25);
     }
     .grain::before {
       content: "";
@@ -102,12 +136,12 @@
   </style>
   <!-- Horario: 19:00–23:00 local (navegador) -->
 </head>
-<body class="wood-stone-bg min-h-screen text-amicii-cream antialiased">
+<body class="brick-bg min-h-screen text-amicii-cream antialiased">
   <div class="grain relative z-10 min-h-screen flex flex-col">
     <div class="sticky top-0 z-50 w-full">
       <div
         id="fomo-banner"
-        class="hidden w-full border-b border-amicii-gold/35 bg-gradient-to-r from-[#0a0a0a] via-[#1a150c] to-[#0a0a0a] shadow-md shadow-black/30"
+        class="hidden w-full border-b border-amicii-gold/40 bg-gradient-to-r from-amicii-black via-[#1a100c] to-amicii-black shadow-md shadow-black/40"
         role="status"
         aria-live="polite"
       >
@@ -126,40 +160,47 @@
           </p>
         </div>
       </div>
-    <header class="border-b border-amicii-gold/20 bg-amicii-black/60 backdrop-blur-md z-40">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex h-20 flex-wrap items-center justify-between gap-y-2">
-          <a href="#" class="group flex min-w-0 items-center gap-2 sm:gap-3">
-            <span class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-amicii-cream">Amicii</span>
-            <span class="hidden sm:inline h-6 w-px flex-shrink-0 bg-amicii-gold/40" aria-hidden="true"></span>
-            <span class="hidden sm:inline text-xs font-medium uppercase tracking-[0.3em] text-amicii-goldsoft/90">Pizzería</span>
+    <header class="z-40 border-b border-amicii-gold/25 bg-amicii-black/85 backdrop-blur-lg">
+      <div class="relative mx-auto flex min-h-[5.25rem] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:min-h-[6.5rem] sm:px-6 lg:px-8">
+        <nav class="z-20 flex flex-1 items-center gap-4 text-[0.7rem] font-semibold uppercase tracking-wider text-amicii-cream/85 sm:gap-6 sm:text-xs md:text-sm">
+          <a href="#menu" class="transition-colors hover:text-amicii-goldbright">Menú</a>
+          <a href="#experiencia" class="hidden sm:inline transition-colors hover:text-amicii-goldbright">Experiencia</a>
+        </nav>
+        <div class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-20 sm:px-28">
+          <a href="#" class="pointer-events-auto flex items-center justify-center transition-opacity hover:opacity-95">
+            <img
+              src="assets/logoamicci.png"
+              alt="AMICII Pizzería Artigianale"
+              class="h-16 w-auto max-w-[220px] object-contain sm:h-20 md:h-24"
+              width="220"
+              height="96"
+            />
           </a>
+        </div>
+        <div class="z-20 flex flex-1 items-center justify-end gap-2 sm:gap-3">
           <div
             id="hours-status-header"
-            class="order-3 w-full text-center sm:order-none sm:mx-4 sm:w-auto sm:max-w-[200px] md:max-w-none"
+            class="max-w-[13rem] shrink sm:max-w-none"
             role="status"
             aria-live="polite"
             title="Horario de atención: 19:00 a 23:00"
           >
-            <span class="inline-flex items-center justify-center gap-2 rounded-full border border-amicii-gold/20 bg-amicii-black/50 px-3 py-1.5 text-[0.7rem] font-medium text-amicii-cream/90 sm:px-4 sm:text-xs"
+            <span
+              class="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-amicii-gold/30 bg-amicii-card/90 px-2 py-1.5 text-[0.62rem] font-medium leading-tight text-amicii-cream sm:px-3 sm:text-xs"
               >…</span
             >
           </div>
-          <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-amicii-cream/90">
-            <a href="#menu" class="hover:text-amicii-gold transition-colors">Menú</a>
-            <a href="#experiencia" class="hover:text-amicii-gold transition-colors">Experiencia</a>
-          </nav>
           <button
             type="button"
             id="btn-open-cart"
-            class="relative flex items-center gap-2 rounded-full border border-amicii-gold/40 bg-amicii-charcoal/80 px-5 py-2.5 text-sm font-semibold text-amicii-cream shadow-lg shadow-black/30 transition hover:border-amicii-gold hover:bg-amicii-gold/10"
+            class="btn-amicii-outline relative flex shrink-0 items-center gap-2 rounded-full px-3 py-2 text-xs font-bold text-amicii-cream shadow-lg shadow-black/30 sm:px-5 sm:py-2.5 sm:text-sm"
             aria-label="Abrir carrito de compras"
           >
-            <svg class="h-5 w-5 text-amicii-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="h-4 w-4 text-amicii-gold sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <span>Carrito</span>
-            <span id="cart-badge" class="absolute -top-1 -right-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amicii-gold px-1.5 text-[0.65rem] font-bold text-amicii-black">0</span>
+            <span class="hidden sm:inline">Carrito</span>
+            <span id="cart-badge" class="absolute -right-1 -top-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amicii-gold px-1.5 text-[0.65rem] font-bold text-amicii-black">0</span>
           </button>
         </div>
       </div>
@@ -167,52 +208,57 @@
     </div>
 
     <main class="flex-1">
-      <section class="relative overflow-hidden border-b border-amicii-gold/15">
+      <section class="relative overflow-hidden border-b border-amicii-gold/20">
         <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
           <div class="max-w-3xl">
-            <p class="mb-4 text-xs font-semibold uppercase tracking-[0.4em] text-amicii-gold">Desde el horno a su mesa</p>
+            <p class="mb-4 text-xs font-semibold uppercase tracking-[0.4em] text-amicii-goldbright">Desde el horno a su mesa</p>
             <h1 class="font-display text-4xl font-bold leading-tight text-amicii-cream sm:text-5xl lg:text-6xl text-shadow-soft">
-              Amicii: sabor auténtico,<br class="hidden sm:block" />
+              AMICII: sabor auténtico,<br class="hidden sm:block" />
               <span class="text-amicii-goldsoft">masa artesanal & corazón italiano</span>
             </h1>
-            <p class="mt-6 max-w-xl text-base leading-relaxed text-amicii-cream/75">
+            <p class="mt-6 max-w-xl text-base font-medium leading-relaxed text-amicii-cream">
               Selección de clásicos napolitanos y calzones rellenos, horneados con ingredientes de primera. Pedí fácil y recibí tu pedido por envío o retiro en local.
             </p>
-            <a href="#menu" class="mt-10 inline-flex items-center gap-2 rounded-full border border-amicii-gold/50 bg-amicii-gold/15 px-8 py-3.5 text-sm font-semibold text-amicii-cream transition hover:bg-amicii-gold/25">Ver el menú</a>
+            <a
+              href="#menu"
+              class="btn-amicii-primary mt-10 inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-bold uppercase tracking-wide"
+              >Pedir ahora</a
+            >
           </div>
         </div>
-        <div class="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-amicii-gold/5 blur-3xl" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-amicii-tomato/10 blur-3xl" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -left-10 bottom-0 h-64 w-64 rounded-full bg-amicii-gold/5 blur-3xl" aria-hidden="true"></div>
       </section>
 
       <section id="menu" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="font-display text-3xl font-bold text-amicii-cream sm:text-4xl">Menú</h2>
-          <p class="mt-3 text-sm text-amicii-cream/60">Cada plato con nombre, descripción, precio y un clic al carrito</p>
+          <h2 class="font-display text-3xl font-bold text-amicii-goldsoft sm:text-4xl">Nuestro menú</h2>
+          <p class="mt-3 text-sm font-medium text-amicii-cream/80">Cada plato con nombre, descripción, precio y un clic al carrito</p>
         </div>
         <div class="mt-16 space-y-20">
           <div>
-            <h3 class="font-display text-2xl font-semibold text-amicii-gold">Pizzas</h3>
-            <p class="mt-2 text-sm text-amicii-cream/55">Clásicas, abundantes muzza y cocción al punto.</p>
+            <h3 class="font-display text-2xl font-semibold text-amicii-cream sm:text-3xl">Nuestras pizzas</h3>
+            <p class="mt-2 text-sm font-medium text-amicii-cream/85">Clásicas, abundantes muzza y cocción al punto.</p>
             <div id="grid-pizzas" class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"></div>
           </div>
           <div id="calzones" class="scroll-mt-24">
-            <div class="relative overflow-hidden rounded-3xl border border-amicii-gold/35 bg-gradient-to-br from-amicii-gold/10 via-amicii-black/70 to-[#0a0a0a] p-8 shadow-2xl shadow-black/40 sm:p-10">
+            <div class="relative overflow-hidden rounded-3xl border border-amicii-gold/35 bg-gradient-to-br from-amicii-gold/12 via-amicii-card/95 to-amicii-black p-8 shadow-2xl shadow-black/50 sm:p-10">
               <div class="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amicii-gold/15 blur-3xl" aria-hidden="true"></div>
               <div class="pointer-events-none absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-amicii-gold/5 blur-2xl" aria-hidden="true"></div>
               <div class="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch lg:gap-12">
                 <div class="flex flex-col justify-center">
-                  <p class="text-xs font-semibold uppercase tracking-[0.4em] text-amicii-gold">Especialidad del horno</p>
-                  <h3 class="mt-4 font-display text-3xl font-bold leading-tight text-amicii-cream sm:text-4xl">Calzones artesanales</h3>
-                  <p class="mt-5 text-sm leading-relaxed text-amicii-cream/80">
+                  <p class="text-xs font-semibold uppercase tracking-[0.4em] text-amicii-goldbright">Especialidad del horno</p>
+                  <h3 class="mt-4 font-display text-3xl font-bold leading-tight text-amicii-goldsoft sm:text-4xl">Calzones artesanales</h3>
+                  <p class="mt-5 text-sm font-medium leading-relaxed text-amicii-cream">
                     <span class="font-semibold text-amicii-goldsoft">¿Todavía no probaste un calzone?</span> Podés imaginarlo como una
                     <strong class="font-semibold text-amicii-cream">pizza doblada al horno</strong>: la misma masa, rellenada, doblada y horneada hasta que quede
                     <em class="not-italic text-amicii-cream/90">dorada por fuera y tierna por dentro</em>, con el queso fundido atrapado en el centro. Un formato distinto, mismo amor de siempre.
                   </p>
                 </div>
-                <div class="flex flex-col justify-center rounded-2xl border border-amicii-gold/25 bg-amicii-black/50 p-6 ring-1 ring-inset ring-amicii-gold/10 sm:p-8">
-                  <p class="font-display text-xl text-amicii-gold sm:text-2xl">Pizza doblada al horno</p>
-                  <p class="mt-3 text-sm leading-relaxed text-amicii-cream/65">Así de simple: toda la experiencia de una pizza, en un paquete crujiente. Perfecto para quien quiere probar algo nuevo sin salir de lo clásico.</p>
-                  <ul class="mt-6 space-y-3 text-sm text-amicii-cream/85" role="list">
+                <div class="flex flex-col justify-center rounded-2xl border border-amicii-gold/30 bg-amicii-card/80 p-6 ring-1 ring-inset ring-amicii-gold/15 sm:p-8">
+                  <p class="font-display text-xl text-amicii-goldbright sm:text-2xl">Pizza doblada al horno</p>
+                  <p class="mt-3 text-sm font-medium leading-relaxed text-amicii-cream">Así de simple: toda la experiencia de una pizza, en un paquete crujiente. Perfecto para quien quiere probar algo nuevo sin salir de lo clásico.</p>
+                  <ul class="mt-6 space-y-3 text-sm font-medium text-amicii-cream" role="list">
                     <li class="flex gap-3">
                       <span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-amicii-gold" aria-hidden="true"></span>
                       Masa artesanal, relleno abundante y sellado al horno
@@ -225,24 +271,24 @@
                 </div>
               </div>
             </div>
-            <p class="mt-10 text-center text-sm text-amicii-cream/60 sm:text-left">Elegí el tuyo abajo: dos recetas, mismo cuidado Amicii.</p>
+            <p class="mt-10 text-center text-sm font-medium text-amicii-cream/85 sm:text-left">Elegí el tuyo abajo: dos recetas, mismo cuidado AMICII.</p>
             <div id="grid-calzones" class="mt-8 grid max-w-5xl gap-8 sm:grid-cols-2"></div>
           </div>
         </div>
       </section>
 
-      <section id="experiencia" class="border-t border-amicii-gold/15 bg-amicii-black/40 py-20">
+      <section id="experiencia" class="border-t border-amicii-gold/20 bg-amicii-card/50 py-20">
         <div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <h2 class="font-display text-2xl font-bold text-amicii-cream">Una experiencia Amicii</h2>
-          <p class="mt-4 text-sm leading-relaxed text-amicii-cream/65">
+          <h2 class="font-display text-2xl font-bold text-amicii-goldsoft sm:text-3xl">Una experiencia AMICII</h2>
+          <p class="mt-4 text-sm font-medium leading-relaxed text-amicii-cream">
             Masa de fermentación lenta, horno de alta temperatura y el toque de oro de nuestra presentación. Pedí con confianza: el carrito se guarda aunque cierres la pestaña.
           </p>
         </div>
       </section>
     </main>
 
-    <footer class="border-t border-amicii-gold/20 bg-amicii-black/80 py-10 text-center text-xs text-amicii-cream/50">
-      <p class="font-display text-sm text-amicii-gold/90">Amicii Pizzería</p>
+    <footer class="border-t border-amicii-gold/25 bg-amicii-black/90 py-10 text-center text-xs text-amicii-cream/60">
+      <p class="font-display text-sm font-semibold tracking-wide text-amicii-goldbright">AMICII Pizzería Artigianale</p>
       <div
         id="hours-status-footer"
         class="mt-3 flex justify-center"
@@ -258,7 +304,7 @@
   <button
     type="button"
     id="btn-floating-cart"
-    class="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full border-2 border-amicii-gold/50 bg-amicii-charcoal shadow-2xl shadow-black/50 transition hover:scale-105 hover:border-amicii-gold md:bottom-8 md:right-8"
+    class="btn-amicii-outline fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full shadow-2xl shadow-black/50 transition hover:scale-105 md:bottom-8 md:right-8"
     aria-label="Abrir carrito"
   >
     <span class="relative">
@@ -275,9 +321,9 @@
   >
     <div
       id="chat-panel"
-      class="hidden w-full max-w-sm overflow-hidden rounded-2xl border border-amicii-gold/30 bg-amicii-charcoal/95 shadow-2xl shadow-black/40 backdrop-blur-md"
+      class="hidden w-full max-w-sm overflow-hidden rounded-2xl border border-amicii-gold/35 bg-amicii-card/95 shadow-2xl shadow-black/50 backdrop-blur-md"
     >
-      <div class="flex items-center gap-3 border-b border-amicii-gold/20 bg-amicii-black/50 px-4 py-3">
+      <div class="flex items-center gap-3 border-b border-amicii-gold/25 bg-amicii-black/70 px-4 py-3">
         <div class="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border-2 border-amicii-gold/50 bg-amicii-black">
           <img
             src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=200&q=80"
@@ -287,20 +333,20 @@
             height="48"
           />
         </div>
-        <div>
-          <p class="text-sm font-semibold text-amicii-cream">Maestro Pizzero</p>
-          <p class="text-xs text-amicii-goldsoft/80">Guía Amicii</p>
+        <div class="min-w-0">
+          <p class="font-display text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">IA Maestro Pizzero</p>
+          <p class="truncate text-sm font-semibold text-amicii-cream">Chef guía AMICII</p>
         </div>
-        <button type="button" id="btn-close-chat" class="ml-auto rounded-lg p-1.5 text-amicii-cream/60 hover:bg-amicii-gold/10 hover:text-amicii-cream" aria-label="Cerrar chat">
+        <button type="button" id="btn-close-chat" class="ml-auto rounded-lg p-1.5 text-amicii-cream/70 transition hover:bg-amicii-tomato/20 hover:text-amicii-cream" aria-label="Cerrar chat">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
-      <div id="chat-messages" class="max-h-72 min-h-[180px] space-y-3 overflow-y-auto p-4 text-sm text-amicii-cream/90"></div>
+      <div id="chat-messages" class="max-h-72 min-h-[180px] space-y-3 overflow-y-auto bg-amicii-black/40 p-4 text-sm font-medium text-amicii-cream"></div>
     </div>
     <button
       type="button"
       id="btn-chat-bubble"
-      class="group flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-amicii-gold/50 bg-amicii-charcoal shadow-2xl shadow-black/50 transition hover:scale-105 hover:border-amicii-gold"
+      class="btn-amicii-outline group flex h-16 w-16 items-center justify-center overflow-hidden rounded-full shadow-2xl shadow-black/50 transition hover:scale-105"
       title="Hablar con el Maestro Pizzero"
       aria-label="Abrir asistente Maestro Pizzero"
     >
@@ -321,27 +367,27 @@
   ></div>
   <aside
     id="cart-panel"
-    class="fixed right-0 top-0 z-[60] flex h-full w-full max-w-md translate-x-full flex-col border-l border-amicii-gold/20 bg-gradient-to-b from-[#0f0f0f] to-[#0a0a0a] shadow-2xl"
+    class="fixed right-0 top-0 z-[60] flex h-full w-full max-w-md translate-x-full flex-col border-l border-amicii-gold/30 bg-gradient-to-b from-amicii-card via-amicii-charcoal to-amicii-black shadow-2xl"
     role="dialog"
     aria-labelledby="cart-title"
     aria-modal="true"
   >
-    <div class="flex items-center justify-between border-b border-amicii-gold/20 px-5 py-4">
-      <h2 id="cart-title" class="font-display text-xl font-bold text-amicii-cream">Tu pedido</h2>
-      <button type="button" id="btn-close-cart" class="rounded-lg p-2 text-amicii-cream/70 hover:bg-amicii-gold/10 hover:text-amicii-cream" aria-label="Cerrar carrito">
+    <div class="flex items-center justify-between border-b border-amicii-gold/25 bg-amicii-black/50 px-5 py-4">
+      <h2 id="cart-title" class="font-display text-xl font-bold text-amicii-goldsoft">Tu pedido</h2>
+      <button type="button" id="btn-close-cart" class="rounded-lg p-2 text-amicii-cream/75 transition hover:bg-amicii-tomato/20 hover:text-amicii-cream" aria-label="Cerrar carrito">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
       </button>
     </div>
-    <div id="cart-empty" class="flex flex-1 flex-col items-center justify-center p-8 text-center text-sm text-amicii-cream/50">
+    <div id="cart-empty" class="flex flex-1 flex-col items-center justify-center p-8 text-center text-sm font-medium text-amicii-cream/70">
       <p>Tu carrito está vacío.</p>
       <p class="mt-2 text-xs">Agregá deliciosas pizzas o un calzone artesanal.</p>
     </div>
     <div id="cart-list" class="hidden flex-1 overflow-y-auto p-4"></div>
-    <div id="cart-footer" class="hidden border-t border-amicii-gold/20 p-4 space-y-3">
+    <div id="cart-footer" class="hidden border-t border-amicii-gold/25 bg-amicii-black/40 p-4 space-y-3">
       <p id="promo-line" class="text-xs text-amicii-gold/90 hidden"></p>
       <div
         id="cart-reserva-block"
-        class="hidden space-y-2 rounded-xl border border-amicii-gold/25 bg-amicii-gold/5 p-3 ring-1 ring-inset ring-amicii-gold/10"
+        class="hidden space-y-2 rounded-xl border border-amicii-gold/30 bg-amicii-card/90 p-3 ring-1 ring-inset ring-amicii-gold/15"
         role="group"
         aria-labelledby="cart-reserva-label"
       >
@@ -351,7 +397,7 @@
         <select
           id="cart-reserva-hora"
           name="hora_reserva"
-          class="w-full cursor-pointer rounded-xl border border-amicii-gold/30 bg-[#0d0d0d] px-3 py-2.5 text-sm font-medium text-amicii-cream shadow-inner shadow-black/20 transition hover:border-amicii-gold/50 focus:border-amicii-gold/60 focus:outline-none focus:ring-1 focus:ring-amicii-gold/40"
+          class="w-full cursor-pointer rounded-xl border border-amicii-gold/35 bg-amicii-black px-3 py-2.5 text-sm font-medium text-amicii-cream shadow-inner shadow-black/30 transition hover:border-amicii-goldbright/50 focus:border-amicii-tomato/60 focus:outline-none focus:ring-1 focus:ring-amicii-tomato/35"
         >
           <option value="" selected disabled>Seleccionar hora</option>
           <option value="19:00">19:00</option>
@@ -361,9 +407,9 @@
           <option value="20:00">20:00</option>
           <option value="20:15">20:15</option>
         </select>
-        <p class="text-[0.65rem] text-amicii-cream/45">Intervalos aprox. según carga de cocina.</p>
+        <p class="text-[0.65rem] text-amicii-cream/60">Intervalos aprox. según carga de cocina.</p>
       </div>
-      <div class="flex items-center justify-between text-sm text-amicii-cream/80">
+      <div class="flex items-center justify-between text-sm font-medium text-amicii-cream">
         <span>Subtotal</span>
         <span id="cart-subtotal">$0</span>
       </div>
@@ -373,12 +419,12 @@
       </div>
       <div class="flex items-center justify-between border-t border-amicii-gold/15 pt-3">
         <span class="font-semibold text-amicii-cream">Total</span>
-        <span id="cart-total" class="text-lg font-bold text-amicii-gold">$0</span>
+        <span id="cart-total" class="text-lg font-bold text-amicii-goldbright">$0</span>
       </div>
       <button
         type="button"
         id="btn-proceed-checkout"
-        class="w-full rounded-full bg-amicii-gold py-3.5 text-sm font-bold text-amicii-black transition hover:brightness-110"
+        class="btn-amicii-primary w-full rounded-full py-3.5 text-sm font-bold uppercase tracking-wide"
         data-label-open="Ir al checkout"
         data-label-closed="Completar reserva"
       >
@@ -387,7 +433,7 @@
       <button
         type="button"
         id="btn-empty-cart"
-        class="w-full rounded-full border border-amicii-gold/30 py-2.5 text-xs font-medium text-amicii-cream/80 hover:border-amicii-gold/50"
+        class="btn-amicii-outline w-full rounded-full py-2.5 text-xs font-semibold uppercase tracking-wide"
       >
         Vaciar carrito
       </button>
@@ -402,12 +448,12 @@
     aria-labelledby="checkout-title"
   >
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" id="checkout-backdrop"></div>
-    <div class="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-amicii-gold/25 bg-gradient-to-b from-[#121212] to-[#0a0a0a] p-6 shadow-2xl">
-      <h2 id="checkout-title" class="font-display text-2xl font-bold text-amicii-cream">Finalizar pedido</h2>
-      <p class="mt-2 text-xs text-amicii-cream/55">Completá envío, pago y cupón antes de enviar el pedido por WhatsApp.</p>
+    <div class="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-amicii-gold/30 bg-gradient-to-b from-amicii-card to-amicii-black p-6 shadow-2xl">
+      <h2 id="checkout-title" class="font-display text-2xl font-bold text-amicii-goldsoft sm:text-3xl">Finalizar pedido</h2>
+      <p class="mt-2 text-xs font-medium text-amicii-cream/85">Completá envío, pago y cupón antes de enviar el pedido por WhatsApp.</p>
       <p
         id="checkout-reserva-notice"
-        class="mt-4 hidden rounded-xl border border-amicii-gold/25 bg-amicii-gold/10 px-3 py-2.5 text-xs leading-relaxed text-amicii-cream/80"
+        class="mt-4 hidden rounded-xl border border-amicii-gold/30 bg-amicii-card/80 px-3 py-2.5 text-xs font-medium leading-relaxed text-amicii-cream"
         role="status"
       >
         <span class="font-semibold text-amicii-gold">Cocina fuera de horario.</span> Estás armando un pedido
@@ -415,48 +461,48 @@
       </p>
       <form id="checkout-form" class="mt-6 space-y-6">
         <div>
-          <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-gold">Entrega <span class="text-red-400">*</span></p>
+          <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Entrega <span class="text-amicii-tomato">*</span></p>
           <div class="space-y-2">
-            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/20 bg-amicii-black/40 p-3 hover:border-amicii-gold/40 has-[:checked]:border-amicii-gold/50">
-              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 text-amicii-gold" required />
-              <span class="text-sm">Envío a domicilio</span>
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
+              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 accent-amicii-tomato" required />
+              <span class="text-sm font-medium text-amicii-cream">Envío a domicilio</span>
             </label>
-            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/20 bg-amicii-black/40 p-3 hover:border-amicii-gold/40 has-[:checked]:border-amicii-gold/50">
-              <input type="radio" name="entrega" value="retiro" class="h-4 w-4 text-amicii-gold" required />
-              <span class="text-sm">Retiro en local</span>
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
+              <input type="radio" name="entrega" value="retiro" class="h-4 w-4 accent-amicii-tomato" required />
+              <span class="text-sm font-medium text-amicii-cream">Retiro en local</span>
             </label>
           </div>
           <div id="field-direccion" class="mt-3 hidden">
-            <label for="direccion" class="text-xs text-amicii-cream/60">Dirección completa <span class="text-red-400">*</span></label>
+            <label for="direccion" class="text-xs font-medium text-amicii-cream/80">Dirección completa <span class="text-amicii-tomato">*</span></label>
             <textarea
               id="direccion"
               name="direccion"
               rows="2"
-              class="mt-1 w-full rounded-xl border border-amicii-gold/20 bg-amicii-black/50 px-3 py-2 text-sm text-amicii-cream placeholder-amicii-cream/30 focus:border-amicii-gold/50 focus:outline-none"
+              class="mt-1 w-full rounded-xl border border-amicii-gold/25 bg-amicii-black/60 px-3 py-2 text-sm font-medium text-amicii-cream placeholder-amicii-cream/35 focus:border-amicii-tomato/60 focus:outline-none focus:ring-1 focus:ring-amicii-tomato/30"
               placeholder="Calle, número, piso, barrio, referencia..."
             ></textarea>
           </div>
         </div>
         <div>
-          <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-gold">Pago <span class="text-red-400">*</span></p>
+          <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Pago <span class="text-amicii-tomato">*</span></p>
           <div class="space-y-2">
-            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/20 bg-amicii-black/40 p-3 hover:border-amicii-gold/40 has-[:checked]:border-amicii-gold/50">
-              <input type="radio" name="pago" value="local" class="h-4 w-4 text-amicii-gold" required />
-              <span class="text-sm">Pago en el local (efectivo o tarjeta al retirar/recibir)</span>
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
+              <input type="radio" name="pago" value="local" class="h-4 w-4 accent-amicii-tomato" required />
+              <span class="text-sm font-medium text-amicii-cream">Pago en el local (efectivo o tarjeta al retirar/recibir)</span>
             </label>
-            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/20 bg-amicii-black/40 p-3 hover:border-amicii-gold/40 has-[:checked]:border-amicii-gold/50">
-              <input type="radio" name="pago" value="mercadopago" class="h-4 w-4 text-amicii-gold" required />
-              <span class="text-sm">Mercado Pago</span>
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
+              <input type="radio" name="pago" value="mercadopago" class="h-4 w-4 accent-amicii-tomato" required />
+              <span class="text-sm font-medium text-amicii-cream">Mercado Pago</span>
             </label>
           </div>
         </div>
         <div>
-          <label for="cupon" class="text-xs font-semibold uppercase tracking-wider text-amicii-gold">Cupón de descuento</label>
+          <label for="cupon" class="text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Cupón de descuento</label>
           <input
             type="text"
             id="cupon"
             name="cupon"
-            class="mt-1 w-full rounded-xl border border-amicii-gold/20 bg-amicii-black/50 px-3 py-2.5 text-sm text-amicii-cream placeholder-amicii-cream/30 focus:border-amicii-gold/50 focus:outline-none"
+            class="mt-1 w-full rounded-xl border border-amicii-gold/25 bg-amicii-black/60 px-3 py-2.5 text-sm font-medium text-amicii-cream placeholder-amicii-cream/35 focus:border-amicii-tomato/60 focus:outline-none focus:ring-1 focus:ring-amicii-tomato/30"
             placeholder="Código (opcional)"
             autocomplete="off"
           />
@@ -465,18 +511,18 @@
           <button
             type="button"
             id="btn-checkout-cancel"
-            class="flex-1 rounded-full border border-amicii-gold/30 py-3 text-sm font-medium text-amicii-cream/90 hover:border-amicii-gold/50"
+            class="btn-amicii-outline flex-1 rounded-full py-3 text-sm font-semibold"
           >
             Volver
           </button>
           <button
             type="button"
             id="btn-whatsapp"
-            class="flex-1 rounded-full bg-[#25D366] py-3 text-sm font-bold text-white transition hover:brightness-110"
-            data-label-open="Finalizar pedido por WhatsApp"
+            class="btn-amicii-primary flex-1 rounded-full py-3 text-sm font-bold uppercase tracking-wide"
+            data-label-open="Finalizar por WhatsApp"
             data-label-closed="Reservar para las 19:00 hs"
           >
-            Finalizar pedido por WhatsApp
+            Finalizar por WhatsApp
           </button>
         </div>
       </form>
@@ -492,35 +538,35 @@
   >
     <div class="absolute inset-0 bg-[#040404]/80 backdrop-blur-md" id="reservation-confirm-backdrop" aria-hidden="true"></div>
     <div
-      class="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-amicii-gold/35 bg-gradient-to-b from-[#141210] via-[#0e0d0b] to-[#0a0a0a] shadow-[0_24px_64px_rgba(0,0,0,0.65)]"
+      class="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-amicii-gold/35 bg-gradient-to-b from-amicii-card via-amicii-charcoal to-amicii-black shadow-[0_24px_64px_rgba(0,0,0,0.72)]"
     >
       <div
-        class="bg-gradient-to-r from-amicii-gold/15 to-transparent px-6 pb-4 pt-5 text-left border-b border-amicii-gold/20"
+        class="border-b border-amicii-gold/25 bg-gradient-to-r from-amicii-tomato/15 via-amicii-gold/10 to-transparent px-6 pb-4 pt-5 text-left"
       >
-        <p class="text-[0.65rem] font-semibold uppercase tracking-[0.4em] text-amicii-gold/90">Amicii · reserva</p>
-        <h2 id="reservation-confirm-title" class="font-display mt-2 text-2xl font-bold leading-tight text-amicii-cream sm:text-3xl">
+        <p class="text-[0.65rem] font-semibold uppercase tracking-[0.4em] text-amicii-goldbright">AMICII · reserva</p>
+        <h2 id="reservation-confirm-title" class="font-display mt-2 text-2xl font-bold leading-tight text-amicii-goldsoft sm:text-3xl">
           Confirmar pedido programado
         </h2>
       </div>
-      <div class="space-y-4 px-6 py-5 text-sm text-amicii-cream/75">
+      <div class="space-y-4 px-6 py-5 text-sm font-medium text-amicii-cream/90">
         <p>
           Ahora la cocina está <strong class="text-amicii-cream/95">cerrada</strong>. Tu pedido se registrará con la etiqueta de
           <span class="font-semibold text-amicii-goldsoft">entrega/retiro priorizado desde las 19:00 hs</span>, al abrir el servicio.
         </p>
-        <p class="text-xs text-amicii-cream/50">Podés ajustar detalles (domicilio, pago) por WhatsApp si hace falta.</p>
+        <p class="text-xs font-medium text-amicii-cream/65">Podés ajustar detalles (domicilio, pago) por WhatsApp si hace falta.</p>
       </div>
-      <div class="flex flex-col gap-2 border-t border-amicii-gold/15 bg-amicii-black/40 px-6 py-4 sm:flex-row sm:justify-end">
+      <div class="flex flex-col gap-2 border-t border-amicii-gold/20 bg-amicii-black/50 px-6 py-4 sm:flex-row sm:justify-end">
         <button
           type="button"
           id="btn-reservation-cancel"
-          class="order-2 rounded-full border border-amicii-gold/30 px-5 py-2.5 text-sm font-medium text-amicii-cream/90 transition hover:border-amicii-gold/50 sm:order-1"
+          class="btn-amicii-outline order-2 rounded-full px-5 py-2.5 text-sm font-semibold sm:order-1"
         >
           Volver al formulario
         </button>
         <button
           type="button"
           id="btn-reservation-confirm-whatsapp"
-          class="order-1 inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-110 sm:order-2"
+          class="btn-amicii-primary order-1 inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold uppercase tracking-wide sm:order-2"
         >
           <span aria-hidden="true">➤</span>
           Enviar por WhatsApp
@@ -694,7 +740,7 @@
       id: "cl-esp",
       category: "calzone",
       name: "Calzone Especial",
-      desc: "Relleno con jamón, queso, morrones: versión contundente Amicii.",
+      desc: "Relleno con jamón, queso, morrones: versión contundente AMICII.",
       price: 9500,
       image: "https://images.unsplash.com/photo-1604382355076-af4b0ed6013b?w=800&q=80",
     },
@@ -782,8 +828,8 @@
   function renderProductCard(p) {
     const isPizza = p.category === "pizza";
     const cardClass = isPizza
-      ? "pizza-card group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/15 bg-amicii-black/50 shadow-lg transition hover:border-amicii-gold/35 hover:shadow-amicii-gold/5"
-      : "group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/15 bg-amicii-black/50 shadow-lg transition hover:border-amicii-gold/35 hover:shadow-amicii-gold/5";
+      ? "pizza-card group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/25 bg-amicii-card/95 shadow-lg shadow-black/30 transition hover:border-amicii-goldbright/50 hover:shadow-amicii-tomato/10"
+      : "group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/25 bg-amicii-card/95 shadow-lg shadow-black/30 transition hover:border-amicii-goldbright/50 hover:shadow-amicii-tomato/10";
     const imgClass = isPizza
       ? "pizza-card-image h-full w-full object-cover"
       : "h-full w-full object-cover";
@@ -791,18 +837,18 @@
       <article class="${cardClass}">
         <div class="relative aspect-[4/3] overflow-hidden">
           <img src="${p.image}" alt="${p.name}" class="${imgClass}" loading="lazy" width="800" height="600" />
-          <div class="absolute inset-0 bg-gradient-to-t from-amicii-black/80 to-transparent" aria-hidden="true"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-amicii-black/85 to-transparent" aria-hidden="true"></div>
         </div>
         <div class="flex flex-1 flex-col p-5">
-          <h4 class="font-display text-lg font-bold text-amicii-cream">${p.name}</h4>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-amicii-cream/60">${p.desc}</p>
+          <h4 class="font-display text-lg font-bold text-amicii-goldsoft">${p.name}</h4>
+          <p class="mt-2 flex-1 text-sm font-medium leading-relaxed text-amicii-cream">${p.desc}</p>
           <div class="mt-4 flex items-end justify-between gap-3">
-            <span class="text-lg font-bold text-amicii-gold">${formatMoney(p.price)}</span>
+            <span class="text-lg font-bold text-amicii-goldbright">${formatMoney(p.price)}</span>
             <button
               type="button"
-              class="add-to-cart inline-flex items-center justify-center rounded-full border border-amicii-gold/50 bg-amicii-gold/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-amicii-cream transition hover:bg-amicii-gold/25"
+              class="add-to-cart btn-amicii-primary inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide"
               data-id="${p.id}"
-            >Agregar al carrito</button>
+            >Agregar</button>
           </div>
         </div>
       </article>
@@ -911,16 +957,16 @@
           unitNote = ' <span class="text-xs text-green-300/80">(−20% promo)</span>';
         }
         return `
-          <div class="cart-line mb-3 flex gap-3 rounded-xl border border-amicii-gold/15 bg-amicii-black/30 p-3" data-cart-line-id="${p.id}" data-line="${p.id}">
+          <div class="cart-line mb-3 flex gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/90 p-3 shadow-inner shadow-black/20" data-cart-line-id="${p.id}" data-line="${p.id}">
             <img src="${p.image}" alt="" class="h-16 w-20 flex-shrink-0 rounded-lg object-cover" width="80" height="64" />
             <div class="min-w-0 flex-1">
               <p class="text-sm font-semibold text-amicii-cream line-clamp-2">${p.name}</p>
-              <p class="text-xs text-amicii-cream/50">${formatMoney(p.price)} c/u${unitNote}</p>
+              <p class="text-xs font-medium text-amicii-cream/75">${formatMoney(p.price)} c/u${unitNote}</p>
               <div class="mt-2 flex items-center gap-2">
-                <button type="button" class="cart-minus h-8 w-8 flex-shrink-0 rounded-lg border border-amicii-gold/30 text-amicii-cream transition hover:bg-amicii-gold/10" data-id="${p.id}" aria-label="Quitar una unidad">−</button>
-                <span class="min-w-[1.5rem] text-center text-sm font-bold tabular-nums">${line.qty}</span>
-                <button type="button" class="cart-plus h-8 w-8 flex-shrink-0 rounded-lg border border-amicii-gold/30 text-amicii-cream transition hover:bg-amicii-gold/10" data-id="${p.id}" aria-label="Agregar una unidad">+</button>
-                <button type="button" class="cart-remove ml-auto text-xs text-red-300/80 underline transition hover:text-red-200" data-id="${p.id}">Quitar todo</button>
+                <button type="button" class="cart-minus h-8 w-8 flex-shrink-0 rounded-lg border border-amicii-gold/35 text-amicii-cream transition hover:border-amicii-tomato/50 hover:bg-amicii-tomato/15" data-id="${p.id}" aria-label="Quitar una unidad">−</button>
+                <span class="min-w-[1.5rem] text-center text-sm font-bold tabular-nums text-amicii-goldbright">${line.qty}</span>
+                <button type="button" class="cart-plus h-8 w-8 flex-shrink-0 rounded-lg border border-amicii-gold/35 text-amicii-cream transition hover:border-amicii-tomato/50 hover:bg-amicii-tomato/15" data-id="${p.id}" aria-label="Agregar una unidad">+</button>
+                <button type="button" class="cart-remove ml-auto text-xs font-semibold text-amicii-tomato/90 underline transition hover:text-amicii-goldbright" data-id="${p.id}">Quitar todo</button>
               </div>
             </div>
           </div>
@@ -1157,17 +1203,17 @@
 
   const chatOpen = { value: false };
   const WELCOME_OPEN =
-    "¡Benvenuti a Amicii! Soy su guía pizzero. ¿Buscás una Pizza clásica o te gustaría probar nuestros Calzones artesanales?";
+    "¡Benvenuti a AMICII! Soy su guía pizzero. ¿Buscás una Pizza clásica o te gustaría probar nuestros Calzones artesanales?";
   const WELCOME_CLOSED =
     "¡Benvenuti! Actualmente nuestra cocina está cerrada. Abrimos de 19:00 a 23:00 hs. ¿Te gustaría realizar una reserva ahora para que tu pedido sea entregado apenas abramos a las 19:00?";
-  const TIP = "Tip Amicii: si llevás 2 Pizzas, el Calzone tiene 20% de descuento.";
+  const TIP = "Tip AMICII: si llevás 2 Pizzas, el Calzone tiene 20% de descuento.";
 
   function appendChatMessage(text, fromBot) {
     const el = document.getElementById("chat-messages");
     const row = document.createElement("div");
     row.className = fromBot
-      ? "rounded-xl rounded-bl-sm bg-amicii-gold/10 border border-amicii-gold/20 px-3 py-2 text-left"
-      : "ml-8 rounded-xl rounded-br-sm bg-amicii-black/50 px-3 py-2 text-left";
+      ? "rounded-xl rounded-bl-sm border border-amicii-gold/30 bg-amicii-card/90 px-3 py-2 text-left font-medium text-amicii-cream shadow-sm"
+      : "ml-8 rounded-xl rounded-br-sm border border-amicii-gold/20 bg-amicii-black/60 px-3 py-2 text-left font-medium text-amicii-cream";
     row.textContent = text;
     el.appendChild(row);
     el.scrollTop = el.scrollHeight;
@@ -1182,9 +1228,9 @@
     const mkBtn = (label, isPrimary) => {
       const b = document.createElement("button");
       b.type = "button";
-      b.className = (isPrimary
-        ? "rounded-lg border border-amicii-gold bg-amicii-gold/20 px-3 py-1.5 text-xs font-bold text-amicii-cream "
-        : "rounded-lg border border-amicii-gold/30 bg-amicii-black/40 px-3 py-1.5 text-xs font-medium text-amicii-cream/90 ") + "hover:brightness-110";
+      b.className = isPrimary
+        ? "btn-amicii-primary rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wide"
+        : "btn-amicii-outline rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wide";
       b.textContent = label;
       return b;
     };
