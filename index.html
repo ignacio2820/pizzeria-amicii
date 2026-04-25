@@ -763,8 +763,8 @@
   let lastFomoMinuteVal = -1;
 
   const OPEN_HOUR = 19;
-  const OPEN_MINUTE = 30;
-  const CLOSE_HOUR = 24;
+  const OPEN_MINUTE = 0;
+  const CLOSE_HOUR = 23;
   const RESERVA_WHATSAPP_TAG = "[RESERVA FUERA DE HORARIO - ENTREGA PROGRAMADA 19:00 HS]";
   const SFX = {
     add: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
@@ -810,9 +810,6 @@
 
   function isKitchenOpen() {
     const m = new Date();
-    const day = m.getDay(); // 0: dom, 1: lun, ... 6: sab
-    const isOpenDay = day !== 1; // Martes a Domingo
-    if (!isOpenDay) return false;
     const mins = m.getHours() * 60 + m.getMinutes();
     return mins >= OPEN_HOUR * 60 + OPEN_MINUTE && mins < CLOSE_HOUR * 60;
   }
@@ -828,16 +825,16 @@
     const desktopSpan = document.querySelector("#hours-status-header-desktop span");
     if (desktopSpan) {
       desktopSpan.textContent = open
-        ? "🟢 Abierto ahora (hasta 00:00 hs)"
-        : "🔴 Cerrado (abre 19:30 hs · Mar-Dom)";
+        ? "🟢 Abierto ahora (hasta 23:00 hs)"
+        : "🔴 Cerrado (Lun-Dom 19:00 a 23:00 hs)";
       desktopSpan.classList.toggle("status-open-neon", open);
       desktopSpan.classList.toggle("status-closed-red", !open);
     }
     const fSpan = document.querySelector("#hours-status-footer span");
     if (fSpan) {
       fSpan.textContent = open
-        ? "🟢 Abierto ahora (hasta 00:00 hs)"
-        : "🔴 Cerrado (Mar-Dom 19:30 a 00:00 hs)";
+        ? "🟢 Abierto ahora (hasta 23:00 hs)"
+        : "🔴 Cerrado (Lun-Dom 19:00 a 23:00 hs)";
       fSpan.classList.toggle("status-open-neon", open);
       fSpan.classList.toggle("status-closed-red", !open);
     }
@@ -866,7 +863,7 @@
   function isFomoWindow() {
     const m = new Date();
     const mins = m.getHours() * 60 + m.getMinutes();
-    return mins >= 18 * 60 + 30 && mins < 19 * 60 + 30;
+    return mins >= 18 * 60 && mins < 19 * 60;
   }
 
   function updateFomoBanner() {
@@ -881,7 +878,7 @@
     }
     const now = new Date();
     const openT = new Date(now);
-    openT.setHours(19, 30, 0, 0);
+    openT.setHours(19, 0, 0, 0);
     const diff = openT - now;
     if (diff <= 0) {
       bar.classList.add("hidden");
@@ -1114,6 +1111,7 @@
       showChat();
       appendBotTypingMessage("Excelente elección 👨‍🍳🍕 Lo anoto para tu reserva. ¡Mañana va a estar increíble! ✨", 720);
     }
+    maybeTriggerPromoHint();
   }
 
   function showAddedFeedback(btn) {
@@ -1143,6 +1141,7 @@
         playSfx("remove");
         updateBadges();
         renderCart();
+        maybeTriggerPromoHint();
       };
       if (row) {
         row.classList.add("cart-line--leaving");
@@ -1156,6 +1155,7 @@
     saveCart(cart);
     updateBadges();
     renderCart();
+    maybeTriggerPromoHint();
   }
 
   function removeLine(id) {
@@ -1164,6 +1164,7 @@
     playSfx("remove");
     updateBadges();
     renderCart();
+    maybeTriggerPromoHint();
   }
 
   function emptyCart() {
@@ -1175,6 +1176,7 @@
       clearHoraReserva();
       updateBadges();
       renderCart();
+      maybeTriggerPromoHint();
     }
   }
 
@@ -1528,10 +1530,10 @@
   const chatOpen = { value: false };
   let companionTimer = null;
   let lastCompanionIdx = -1;
+  let promoHintShown = false;
   const COMPANION_LINES = [
     "¿Sentís ese aroma? 🍕 Es nuestra masa madre madurando... un secreto de familia 🇮🇹.",
     "Dato de maestro 👨‍🍳: nuestros calzones salen bien doraditos, ¡ideales para compartir! ✨",
-    "Me quedo acá con vos por si tenés alguna duda con los ingredientes. ¡Elegí tranquilo! 🇮🇹",
   ];
   const WELCOME_OPEN =
     "¡Hola! Soy el Maestro de AMICII. ¿Hoy sale una pizza clásica o te tienta probar uno de nuestros calzones artesanales?";
@@ -1540,7 +1542,7 @@
   const WELCOME_RETURNING =
     "¡Qué bueno verte de nuevo! ¿Te quedaste con ganas de otra porción o probamos algo distinto hoy?";
   const WELCOME_CLOSED =
-    "¡Buenas! 🌙 En este momento nuestros hornos están descansando para volver con todo, pero no te quedes con las ganas. Podes dejar tu reserva ahora y mañana te damos prioridad apenas salga la primera pizza del horno. ¡Nada como dormir sabiendo que el almuerzo o la cena ya están resueltos! Te esperamos de Martes a Domingo, de 19:30 a 00:00 hs. ✨";
+    "¡Buenas! 🌙 En este momento nuestros hornos están descansando para volver con todo, pero no te quedes con las ganas. Podes dejar tu reserva ahora y te damos prioridad apenas salga la primera pizza del horno. ¡Nada como dormir sabiendo que la cena ya está resuelta! Te esperamos de Lunes a Domingo, de 19:00 a 23:00 hs. ✨";
   const TIP = "Toque de la casa: con 2 pizzas, tus calzones llevan 20% de descuento.";
 
   function appendChatMessage(text, fromBot) {
@@ -1554,7 +1556,7 @@
     el.scrollTop = el.scrollHeight;
   }
 
-  function appendBotTypingMessage(text, delayMs = 650) {
+  function appendBotTypingMessage(text, delayMs = 1500) {
     const el = document.getElementById("chat-messages");
     const typing = document.createElement("div");
     typing.className =
@@ -1562,30 +1564,49 @@
     typing.textContent = "Maestro amasando";
     el.appendChild(typing);
     el.scrollTop = el.scrollHeight;
+    const typingDelay = Math.max(1500, delayMs || 0);
     setTimeout(() => {
       typing.remove();
       appendChatMessage(text, true);
-    }, delayMs);
+    }, typingDelay);
   }
 
-  function startCompanionMessages() {
-    if (companionTimer) return;
-    companionTimer = setInterval(() => {
+  function scheduleNextCompanionMessage() {
+    if (!chatOpen.value || document.getElementById("chat-panel").classList.contains("hidden")) return;
+    const delay = 30000 + Math.floor(Math.random() * 10001); // 30-40s
+    companionTimer = setTimeout(() => {
       if (!chatOpen.value || document.getElementById("chat-panel").classList.contains("hidden")) return;
       let idx = Math.floor(Math.random() * COMPANION_LINES.length);
       if (COMPANION_LINES.length > 1 && idx === lastCompanionIdx) {
         idx = (idx + 1) % COMPANION_LINES.length;
       }
       lastCompanionIdx = idx;
-      const line = COMPANION_LINES[idx];
-      appendBotTypingMessage(line, 760);
-    }, 26000);
+      appendBotTypingMessage(COMPANION_LINES[idx], 1500);
+      scheduleNextCompanionMessage();
+    }, delay);
+  }
+
+  function startCompanionMessages() {
+    if (companionTimer) return;
+    scheduleNextCompanionMessage();
   }
 
   function stopCompanionMessages() {
     if (!companionTimer) return;
-    clearInterval(companionTimer);
+    clearTimeout(companionTimer);
     companionTimer = null;
+  }
+
+  function maybeTriggerPromoHint() {
+    const hasPromoThreshold = countPizzas() >= 2;
+    if (!hasPromoThreshold) {
+      promoHintShown = false;
+      return;
+    }
+    if (promoHintShown) return;
+    promoHintShown = true;
+    showChat();
+    appendBotTypingMessage("¡Toque de la casa! 👨‍🍳 Veo que llevás 2 pizzas... ¡aprovechá que hoy tus calzones tienen un 20% de descuento! 🇮🇹", 1500);
   }
 
   function chefReplyByIntent(userText) {
@@ -1654,15 +1675,16 @@
     const b1 = mkBtn("Sí, quiero reservar", true);
     b1.addEventListener("click", () => {
       appendChatMessage("Sí, quiero reservar", false);
+      document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
       appendBotTypingMessage(
         "¡Perfecto! Elegí tus especialidades; al finalizar, tocá “Reservar para las 19:00” en el checkout. Tu pedido queda listo para salir del horno al abrir. Ottimo.",
-        760
+        1500
       );
     });
     const b2 = mkBtn("Solo miro especialidades", false);
     b2.addEventListener("click", () => {
       appendChatMessage("Solo miro especialidades, gracias", false);
-      appendBotTypingMessage("Cuando quieras, acá te esperamos con masa artesanal y mucho sabor. Buon appetit.", 760);
+      appendBotTypingMessage("Cuando quieras, acá te esperamos con masa artesanal y mucho sabor. Buon appetit.", 1500);
     });
     row.appendChild(b1);
     row.appendChild(b2);
@@ -1678,20 +1700,20 @@
       hasSeenChat = localStorage.getItem(LS_CHAT_SEEN) === "1";
     } catch (e) {}
     if (hasSeenChat) {
-      setTimeout(() => appendBotTypingMessage(WELCOME_RETURNING, 620), 3000);
-      setTimeout(() => appendBotTypingMessage(WELCOME_OPEN_ALT, 700), 3800);
-      setTimeout(() => appendSmartChatActions(), 4300);
+      setTimeout(() => appendBotTypingMessage(WELCOME_RETURNING, 1500), 300);
+      setTimeout(() => appendBotTypingMessage(WELCOME_OPEN_ALT, 1500), 2100);
+      setTimeout(() => appendSmartChatActions(), 3700);
       return;
     }
     if (isKitchenOpen()) {
-      setTimeout(() => appendBotTypingMessage(WELCOME_OPEN, 620), 3000);
-      setTimeout(() => appendBotTypingMessage(WELCOME_OPEN_ALT, 700), 3800);
-      setTimeout(() => appendBotTypingMessage(TIP, 680), 4500);
-      setTimeout(() => appendSmartChatActions(), 5100);
+      setTimeout(() => appendBotTypingMessage(WELCOME_OPEN, 1500), 300);
+      setTimeout(() => appendBotTypingMessage(WELCOME_OPEN_ALT, 1500), 2100);
+      setTimeout(() => appendBotTypingMessage(TIP, 1500), 3900);
+      setTimeout(() => appendSmartChatActions(), 5500);
     } else {
-      setTimeout(() => appendBotTypingMessage(WELCOME_CLOSED, 620), 3000);
-      setTimeout(() => appendBotTypingMessage(TIP, 680), 4000);
-      setTimeout(() => appendClosedChatActions(), 4700);
+      setTimeout(() => appendBotTypingMessage(WELCOME_CLOSED, 1500), 300);
+      setTimeout(() => appendBotTypingMessage(TIP, 1500), 2200);
+      setTimeout(() => appendClosedChatActions(), 3900);
     }
     try {
       localStorage.setItem(LS_CHAT_SEEN, "1");
@@ -1744,7 +1766,7 @@
     }, 1000);
     setInterval(updateScheduleUI, 60000);
     setTimeout(() => {
-      if (!window.__amiciiChatInit) {
+      if (!window.__amiciiChatInit && !isKitchenOpen()) {
         showChat();
       }
     }, 400);
