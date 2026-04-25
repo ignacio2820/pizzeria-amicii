@@ -43,8 +43,9 @@
       --gold: #ff9d00;
       --gold-bright: #ffd700;
       --cream: #f4eee4;
-      --tomato: #ff4d00;
-      --tomato-dark: #d93d00;
+      --tomato: #d05a2c;
+      --tomato-dark: #b84a21;
+      --tomato-light: #e2713b;
     }
     body {
       font-family: Poppins, system-ui, sans-serif;
@@ -61,17 +62,17 @@
       background-attachment: fixed;
     }
     .btn-amicii-primary {
-      background: linear-gradient(180deg, #ff6b1a 0%, var(--tomato) 54%, var(--tomato-dark) 100%);
+      background: linear-gradient(180deg, var(--tomato-light) 0%, var(--tomato) 54%, var(--tomato-dark) 100%);
       color: #ffffff;
-      border: 1px solid rgba(255, 119, 42, 0.65);
-      box-shadow: 0 6px 20px rgba(255, 77, 0, 0.28), 0 0 12px rgba(255, 157, 0, 0.22);
+      border: 1px solid rgba(208, 90, 44, 0.75);
+      box-shadow: 0 7px 22px rgba(208, 90, 44, 0.35), 0 0 14px rgba(255, 157, 0, 0.2);
       transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, transform 0.2s ease;
     }
     .btn-amicii-primary:hover {
-      background: linear-gradient(180deg, #ff8140 0%, #ff4d00 50%, #d73a00 100%);
+      background: linear-gradient(180deg, #ef7f4d 0%, #d05a2c 52%, #a6411e 100%);
       color: var(--cream);
-      border-color: rgba(255, 130, 70, 0.7);
-      box-shadow: 0 10px 28px rgba(255, 77, 0, 0.45), 0 0 18px rgba(255, 77, 0, 0.32);
+      border-color: rgba(232, 126, 82, 0.78);
+      box-shadow: 0 10px 28px rgba(208, 90, 44, 0.5), 0 0 20px rgba(208, 90, 44, 0.35);
     }
     .btn-amicii-primary:active {
       transform: scale(0.98);
@@ -129,8 +130,8 @@
     #fomo-plural.fomo-tick {
       opacity: 0.55;
       animation: fomoPulse 0.8s ease-in-out infinite;
-      color: #ff4d00;
-      text-shadow: 0 0 8px rgba(255, 77, 0, 0.8);
+      color: #d05a2c;
+      text-shadow: 0 0 8px rgba(208, 90, 44, 0.82);
     }
     @keyframes fomoPulse {
       0%, 100% { opacity: 0.55; }
@@ -184,7 +185,7 @@
         <div class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-20 sm:px-28">
           <a href="#" class="pointer-events-auto flex items-center justify-center transition-opacity hover:opacity-95">
             <img
-              src="assets/logoamicci_1.png"
+              src="assets/logoamicii.png"
               alt="AMICII Pizzería Artigianale"
               class="h-20 w-auto max-w-[260px] object-contain sm:h-24 md:h-32"
               width="220"
