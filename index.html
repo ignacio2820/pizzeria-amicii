@@ -769,7 +769,6 @@
   const SFX = {
     add: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
     remove: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_7f4f8f9f84.mp3?filename=paper-slide-101590.mp3",
-    ding: "https://assets.mixkit.co/active_storage/sfx/91/91-preview.mp3",
   };
   let forceReservaWhatsapp = false;
   let audioReady = false;
@@ -780,7 +779,7 @@
     Object.entries(SFX).forEach(([key, src]) => {
       const audio = new Audio(src);
       audio.preload = "auto";
-      audio.volume = key === "ding" ? 0.5 : key === "remove" ? 0.3 : 0.18;
+      audio.volume = key === "remove" ? 0.3 : 0.18;
       audioPool[key] = audio;
     });
     audioReady = true;
@@ -1382,7 +1381,6 @@
   async function doSendWhatsapp() {
     const c = getCheckoutData();
     if (!c) return;
-    playSfx("ding");
     const waBtnSpinner = document.getElementById("btn-whatsapp-spinner");
     const reservaBtnSpinner = document.getElementById("btn-reservation-whatsapp-spinner");
     waBtnSpinner?.classList.remove("hidden");
