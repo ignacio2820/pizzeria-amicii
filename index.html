@@ -157,11 +157,11 @@
     <div class="sticky top-0 z-50 w-full">
       <div
         id="fomo-banner"
-        class="hidden w-full border-b border-amicii-gold/40 bg-gradient-to-r from-amicii-black via-[#1a100c] to-amicii-black shadow-md shadow-black/40"
+        class="relative z-20 hidden w-full border-b border-amicii-gold/40 bg-gradient-to-r from-amicii-black via-[#1a100c] to-amicii-black shadow-md shadow-black/40"
         role="status"
         aria-live="polite"
       >
-        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-1.5 px-3 py-2.5 text-center sm:px-4 sm:py-3 sm:text-left">
+        <div class="mx-auto mt-2 flex max-w-7xl flex-wrap items-center justify-center gap-1.5 px-3 py-2.5 text-center sm:px-4 sm:py-3 sm:text-left md:mt-0">
           <p id="fomo-line" class="max-w-2xl text-[0.7rem] font-medium leading-relaxed text-amicii-cream/95 sm:text-sm">
             <span
               >Abrimos en </span
@@ -177,45 +177,43 @@
         </div>
       </div>
     <header class="z-40 border-b border-amicii-gold/25 bg-amicii-black/85 backdrop-blur-lg">
-      <div class="relative mx-auto flex min-h-[5.25rem] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:min-h-[6.5rem] sm:px-6 lg:px-8">
-        <nav class="z-20 flex flex-1 items-center gap-4 text-[0.7rem] font-semibold uppercase tracking-wider text-amicii-cream/85 sm:gap-6 sm:text-xs md:text-sm">
-          <a href="#menu" class="transition-colors hover:text-amicii-goldbright">Menú</a>
-          <a href="#experiencia" class="hidden sm:inline transition-colors hover:text-amicii-goldbright">Experiencia</a>
-        </nav>
-        <div class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-20 sm:px-28">
-          <a href="#" class="pointer-events-auto flex items-center justify-center transition-opacity hover:opacity-95">
-            <img
-              src="assets/logoamicci1.png"
-              alt="AMICII Pizzería Artigianale"
-              class="h-20 w-auto max-w-[260px] object-contain sm:h-24 md:h-32"
-              width="220"
-              height="96"
-            />
-          </a>
-        </div>
-        <div class="z-20 flex flex-1 items-center justify-end gap-2 sm:gap-3">
+      <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 py-4 sm:px-6 lg:px-8 md:flex-row md:items-center md:justify-between md:gap-6">
+        <a href="#" class="relative z-30 flex items-center justify-center transition-opacity hover:opacity-95">
+          <img
+            src="assets/logoamicci_1.png"
+            alt="AMICII Pizzería Artigianale"
+            class="h-24 w-auto max-w-[280px] object-contain md:h-32"
+            width="280"
+            height="128"
+          />
+        </a>
+        <div class="relative z-20 flex w-full flex-col items-center gap-3 md:w-auto md:flex-row md:items-center md:justify-end md:gap-4">
           <div
             id="hours-status-header"
-            class="max-w-[13rem] shrink sm:max-w-none"
+            class="w-full max-w-[15rem] md:w-auto md:max-w-none"
             role="status"
             aria-live="polite"
             title="Horario de atención: 19:00 a 23:00"
           >
             <span
-              class="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-amicii-gold/30 bg-amicii-card/90 px-2 py-1.5 text-[0.62rem] font-medium leading-tight text-amicii-cream sm:px-3 sm:text-xs"
+              class="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-amicii-gold/30 bg-amicii-card/90 px-3 py-1.5 text-[0.68rem] font-medium leading-tight text-amicii-cream sm:text-xs"
               >…</span
             >
           </div>
+          <nav class="flex items-center gap-4 text-[0.68rem] font-semibold uppercase tracking-wider text-amicii-cream/85 sm:gap-6 sm:text-xs md:text-sm">
+            <a href="#menu" class="transition-colors hover:text-amicii-goldbright">Menú</a>
+            <a href="#experiencia" class="transition-colors hover:text-amicii-goldbright">Experiencia</a>
+          </nav>
           <button
             type="button"
             id="btn-open-cart"
-            class="btn-amicii-outline relative flex shrink-0 items-center gap-2 rounded-full px-3 py-2 text-xs font-bold text-amicii-cream shadow-lg shadow-black/30 sm:px-5 sm:py-2.5 sm:text-sm"
+            class="btn-amicii-outline relative flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-amicii-cream shadow-lg shadow-black/30 sm:px-5 sm:py-2.5 sm:text-sm"
             aria-label="Abrir carrito de compras"
           >
             <svg class="h-4 w-4 text-amicii-gold sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <span class="hidden sm:inline">Carrito</span>
+            <span>Carrito</span>
             <span id="cart-badge" class="absolute -right-1 -top-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amicii-gold px-1.5 text-[0.65rem] font-bold text-amicii-black">0</span>
           </button>
         </div>
@@ -255,7 +253,7 @@
           <div>
             <h3 class="font-display text-2xl font-semibold text-amicii-cream sm:text-3xl">Nuestras Pizzas Clásicas</h3>
             <p class="mt-2 text-sm font-medium text-amicii-cream/85">Clásicas, abundantes muzza y cocción al punto.</p>
-            <div id="grid-pizzas" class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"></div>
+            <div id="grid-pizzas" class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
           </div>
           <div id="calzones" class="scroll-mt-24">
             <div class="relative overflow-hidden rounded-3xl border border-amicii-gold/35 bg-gradient-to-br from-amicii-gold/12 via-amicii-card/95 to-amicii-black p-8 shadow-2xl shadow-black/50 sm:p-10">
@@ -288,7 +286,7 @@
               </div>
             </div>
             <p class="mt-10 text-center text-sm font-medium text-amicii-cream/85 sm:text-left">Elegí el tuyo abajo: dos recetas, mismo cuidado AMICII.</p>
-            <div id="grid-calzones" class="mt-8 grid max-w-5xl gap-8 sm:grid-cols-2"></div>
+            <div id="grid-calzones" class="mt-8 grid max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
           </div>
         </div>
       </section>
@@ -383,7 +381,7 @@
   ></div>
   <aside
     id="cart-panel"
-    class="fixed right-0 top-0 z-[60] flex h-full w-full max-w-md translate-x-full flex-col border-l border-amicii-gold/30 bg-gradient-to-b from-amicii-card via-amicii-charcoal to-amicii-black shadow-2xl"
+    class="fixed right-0 top-0 z-[60] flex h-full w-full max-w-full translate-x-full flex-col border-l border-amicii-gold/30 bg-gradient-to-b from-amicii-card via-amicii-charcoal to-amicii-black shadow-2xl md:max-w-md"
     role="dialog"
     aria-labelledby="cart-title"
     aria-modal="true"
