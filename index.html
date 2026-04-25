@@ -387,7 +387,7 @@
 
       <section id="menu" class="mx-auto max-w-7xl scroll-mt-24 px-2 pb-16 pt-3 sm:px-6 sm:pb-20 sm:pt-10 lg:px-8 lg:pt-16">
         <div class="text-center">
-          <h2 class="font-display text-3xl font-bold text-amicii-goldsoft sm:text-4xl">Nuestras Pizzas Clásicas</h2>
+          <h2 class="font-display text-3xl font-bold text-amicii-goldsoft sm:text-4xl">Menú Principal</h2>
           <p class="mt-3 text-sm font-medium text-amicii-cream/80">Cada plato con nombre, descripción, precio y un clic al carrito</p>
         </div>
         <div class="mt-6 space-y-16 sm:mt-14 sm:space-y-20 lg:mt-16">
@@ -482,7 +482,7 @@
         <div class="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border-2 border-amicii-gold/50 bg-amicii-black">
           <img
             src="assets/logoamicci_1.png"
-            alt="Maestro Pizzero"
+            alt="Icono del Chef"
             class="h-full w-full object-cover chef-avatar-pulse"
             width="48"
             height="48"
@@ -507,7 +507,7 @@
     >
       <img
         src="assets/logoamicci_1.png"
-        alt=""
+        alt="Icono del Maestro Pizzero"
         class="h-full w-full object-cover chef-avatar-pulse"
         width="64"
         height="64"
@@ -517,12 +517,12 @@
 
   <div
     id="cart-overlay"
-    class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm transition-opacity"
+    class="fixed inset-0 z-50 hidden opacity-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-in-out"
     aria-hidden="true"
   ></div>
   <aside
     id="cart-panel"
-    class="fixed right-0 top-0 z-[60] flex h-full w-full max-w-full translate-x-full flex-col border-l border-amicii-gold/30 bg-gradient-to-b from-amicii-card via-amicii-charcoal to-amicii-black shadow-2xl md:max-w-md"
+    class="fixed right-0 top-0 z-[60] flex h-full w-full max-w-full translate-x-full flex-col border-l border-amicii-gold/30 bg-gradient-to-b from-amicii-card via-amicii-charcoal to-amicii-black shadow-2xl transition-transform duration-300 ease-in-out md:max-w-md"
     role="dialog"
     aria-labelledby="cart-title"
     aria-modal="true"
@@ -604,13 +604,13 @@
 
   <div
     id="checkout-modal"
-    class="fixed inset-0 z-[70] hidden items-center justify-center p-4"
+    class="fixed inset-0 z-[70] hidden opacity-0 items-center justify-center p-4 transition-opacity duration-300 ease-in-out"
     role="dialog"
     aria-modal="true"
     aria-labelledby="checkout-title"
   >
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" id="checkout-backdrop"></div>
-    <div class="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-amicii-gold/30 bg-gradient-to-b from-amicii-card to-amicii-black p-6 shadow-2xl">
+    <div class="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-amicii-gold/30 bg-gradient-to-b from-amicii-card to-amicii-black p-6 shadow-2xl transform transition-transform duration-300 ease-in-out scale-95" id="checkout-modal-content">
       <h2 id="checkout-title" class="font-display text-2xl font-bold text-amicii-goldsoft sm:text-3xl">Finalizar pedido</h2>
       <p class="mt-2 text-xs font-medium text-amicii-cream/85">Completá envío, pago y cupón antes de enviar el pedido por WhatsApp.</p>
       <p
@@ -671,15 +671,16 @@
         </div>
         <div>
           <label for="clientName" class="text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Nombre completo <span class="text-amicii-tomato">*</span></label>
-          <input
-            type="text"
-            id="clientName"
-            name="clientName"
-            class="mt-1 w-full rounded-xl border border-amicii-gold/25 bg-amicii-black/60 px-3 py-2.5 font-body text-sm font-medium text-amicii-cream placeholder-amicii-cream/35 focus:border-amicii-tomato/60 focus:outline-none focus:ring-1 focus:ring-amicii-tomato/30"
-            placeholder="Escribí tu nombre completo"
-            autocomplete="name"
-            required
-          />
+            <input
+              type="text"
+              id="clientName"
+              name="clientName"
+              class="mt-1 w-full rounded-xl border border-amicii-gold/25 bg-amicii-black/60 px-3 py-2.5 font-body text-sm font-medium text-amicii-cream placeholder-amicii-cream/35 focus:border-amicii-tomato/80 focus:outline-none focus:ring-2 focus:ring-amicii-tomato/50 invalid:border-red-500/50 transition-all duration-300"
+              placeholder="Escribí tu nombre completo"
+              autocomplete="name"
+              required
+              aria-required="true"
+            />
         </div>
         <div class="flex flex-col gap-3 sm:flex-row">
           <button
@@ -706,14 +707,15 @@
 
   <div
     id="reservation-confirm-modal"
-    class="fixed inset-0 z-[80] hidden items-center justify-center p-4"
+    class="fixed inset-0 z-[80] hidden opacity-0 items-center justify-center p-4 transition-opacity duration-300 ease-in-out"
     role="dialog"
     aria-modal="true"
     aria-labelledby="reservation-confirm-title"
   >
     <div class="absolute inset-0 bg-[#040404]/80 backdrop-blur-md" id="reservation-confirm-backdrop" aria-hidden="true"></div>
     <div
-      class="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-amicii-gold/35 bg-gradient-to-b from-amicii-card via-amicii-charcoal to-amicii-black shadow-[0_24px_64px_rgba(0,0,0,0.72)]"
+      id="reservation-modal-content"
+      class="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-amicii-gold/35 bg-gradient-to-b from-amicii-card via-amicii-charcoal to-amicii-black shadow-[0_24px_64px_rgba(0,0,0,0.72)] transform transition-transform duration-300 ease-in-out scale-95"
     >
       <div
         class="border-b border-amicii-gold/25 bg-gradient-to-r from-amicii-tomato/15 via-amicii-gold/10 to-transparent px-6 pb-4 pt-5 text-left"
