@@ -298,7 +298,7 @@
         <!-- Escritorio: nav completo desde md -->
         <div class="hidden items-center justify-between gap-8 px-5 py-4 md:flex lg:px-8">
           <div class="flex min-w-0 flex-1 items-center gap-6 lg:gap-10">
-            <a href="#" class="shrink-0 transition-opacity hover:opacity-95">
+            <a href="#menu" class="shrink-0 transition-opacity hover:opacity-95" aria-label="Ir al menú">
               <img
                 src="assets/logoamicci_1.png"
                 alt="AMICII Pizzería Artigianale"
@@ -1489,7 +1489,10 @@
   document.getElementById("btn-continue-shopping").addEventListener("click", closeCart);
   document.getElementById("cart-overlay").addEventListener("click", closeCart);
   document.getElementById("btn-empty-cart").addEventListener("click", emptyCart);
-  document.getElementById("btn-proceed-checkout").addEventListener("click", openCheckout);
+  document.getElementById("btn-proceed-checkout").addEventListener("click", (e) => {
+    e.preventDefault();
+    openCheckout();
+  });
 
   document.querySelectorAll('input[name="entrega"]').forEach((radio) => {
     radio.addEventListener("change", (e) => {
@@ -1515,6 +1518,10 @@
     openCart();
   });
   document.getElementById("btn-whatsapp").addEventListener("click", (e) => {
+    e.preventDefault();
+    sendWhatsapp();
+  });
+  document.getElementById("checkout-form").addEventListener("submit", (e) => {
     e.preventDefault();
     sendWhatsapp();
   });
