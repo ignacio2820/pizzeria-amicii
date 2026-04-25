@@ -149,6 +149,14 @@
       color: #ff6a53 !important;
       text-shadow: 0 0 8px rgba(255, 90, 70, 0.65);
     }
+    .logo-mobile {
+      transition: max-height 0.28s ease, height 0.28s ease;
+    }
+    @media (max-width: 767px) {
+      #site-header.header-scrolled img.logo-mobile {
+        max-height: 2.75rem;
+      }
+    }
   </style>
   <!-- Horario: 19:00–23:00 local (navegador) -->
 </head>
@@ -161,7 +169,7 @@
         role="status"
         aria-live="polite"
       >
-        <div class="mx-auto mt-2 flex max-w-7xl flex-wrap items-center justify-center gap-1.5 px-3 py-2.5 text-center sm:px-4 sm:py-3 sm:text-left md:mt-0">
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-1.5 px-2 py-2 text-center sm:px-4 sm:py-3 sm:text-left">
           <p id="fomo-line" class="max-w-2xl text-[0.7rem] font-medium leading-relaxed text-amicii-cream/95 sm:text-sm">
             <span
               >Abrimos en </span
@@ -176,54 +184,140 @@
           </p>
         </div>
       </div>
-    <header class="z-40 border-b border-amicii-gold/25 bg-amicii-black/85 backdrop-blur-lg">
-      <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 py-4 sm:px-6 lg:px-8 md:flex-row md:items-center md:justify-between md:gap-6">
-        <a href="#" class="relative z-30 flex items-center justify-center transition-opacity hover:opacity-95">
-          <img
-            src="assets/logoamicci_1.png"
-            alt="AMICII Pizzería Artigianale"
-            class="h-24 w-auto max-w-[280px] object-contain md:h-32"
-            width="280"
-            height="128"
-          />
-        </a>
-        <div class="relative z-20 flex w-full flex-col items-center gap-3 md:w-auto md:flex-row md:items-center md:justify-end md:gap-4">
-          <div
-            id="hours-status-header"
-            class="w-full max-w-[15rem] md:w-auto md:max-w-none"
-            role="status"
-            aria-live="polite"
-            title="Horario de atención: 19:00 a 23:00"
-          >
-            <span
-              class="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-amicii-gold/30 bg-amicii-card/90 px-3 py-1.5 text-[0.68rem] font-medium leading-tight text-amicii-cream sm:text-xs"
-              >…</span
+    <header
+      id="site-header"
+      class="z-40 border-b border-amicii-gold/25 bg-amicii-black/45 backdrop-blur-md supports-[backdrop-filter]:bg-amicii-black/40"
+    >
+      <div class="mx-auto max-w-7xl">
+        <!-- Barra tipo app: solo < md -->
+        <div
+          class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1.5 px-2 py-2 md:hidden"
+          aria-label="Barra principal"
+        >
+          <div class="flex min-w-0 flex-col items-start gap-0.5 self-center pl-0.5">
+            <div
+              id="hours-status-header-mobile"
+              class="min-w-0"
+              role="status"
+              aria-live="polite"
+              title="Horario de atención: 19:00 a 23:00"
             >
+              <span
+                id="hours-status-mobile-text"
+                class="block max-w-[5.5rem] text-[0.65rem] font-bold uppercase leading-tight tracking-wide text-amicii-cream/95"
+                >…</span
+              >
+            </div>
+            <button
+              type="button"
+              id="btn-mobile-menu"
+              class="-ml-1 rounded-lg p-1.5 text-amicii-cream/90 transition hover:bg-amicii-tomato/15 hover:text-amicii-goldbright"
+              aria-expanded="false"
+              aria-controls="mobile-nav-panel"
+              aria-label="Secciones y navegación"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
-          <nav class="flex items-center gap-4 text-[0.68rem] font-semibold uppercase tracking-wider text-amicii-cream/85 sm:gap-6 sm:text-xs md:text-sm">
+          <a href="#" class="flex shrink-0 justify-center transition-opacity hover:opacity-95">
+            <img
+              class="logo-mobile h-16 max-h-16 w-auto max-w-[min(200px,52vw)] object-contain transition-[max-height] duration-300"
+              src="assets/logoamicci_1.png"
+              alt="AMICII Pizzería Artigianale"
+              width="200"
+              height="92"
+            />
+          </a>
+          <div class="flex justify-end self-center pr-0.5">
+            <button
+              type="button"
+              id="btn-header-cart"
+              class="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-amicii-gold/35 bg-amicii-card/60 text-amicii-cream transition hover:border-amicii-tomato/50 hover:bg-amicii-tomato/10"
+              aria-label="Abrir carrito"
+            >
+              <svg class="h-5 w-5 text-amicii-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span
+                id="header-cart-badge"
+                class="pointer-events-none absolute -right-0.5 -top-0.5 hidden min-h-[1.125rem] min-w-[1.125rem] flex items-center justify-center rounded-full bg-red-600 px-1 text-[0.65rem] font-bold leading-none text-white shadow-sm ring-2 ring-amicii-black/80"
+                >0</span
+              >
+            </button>
+          </div>
+        </div>
+
+        <!-- Escritorio: nav completo desde md -->
+        <div class="hidden items-center justify-between gap-8 px-5 py-4 md:flex lg:px-8">
+          <div class="flex min-w-0 flex-1 items-center gap-6 lg:gap-10">
+            <a href="#" class="shrink-0 transition-opacity hover:opacity-95">
+              <img
+                src="assets/logoamicci_1.png"
+                alt="AMICII Pizzería Artigianale"
+                class="h-32 w-auto max-w-[280px] object-contain"
+                width="280"
+                height="128"
+              />
+            </a>
+            <div
+              id="hours-status-header-desktop"
+              class="min-w-0"
+              role="status"
+              aria-live="polite"
+              title="Horario de atención: 19:00 a 23:00"
+            >
+              <span
+                class="inline-flex max-w-full items-center justify-center gap-1.5 rounded-full border border-amicii-gold/30 bg-amicii-card/90 px-3 py-1.5 text-xs font-medium leading-tight text-amicii-cream"
+                >…</span
+              >
+            </div>
+          </div>
+          <nav class="flex shrink-0 items-center gap-6 text-sm font-semibold uppercase tracking-wider text-amicii-cream/85 lg:gap-8 lg:text-[0.95rem]">
             <a href="#menu" class="transition-colors hover:text-amicii-goldbright">Menú</a>
             <a href="#experiencia" class="transition-colors hover:text-amicii-goldbright">Experiencia</a>
           </nav>
-          <button
-            type="button"
-            id="btn-open-cart"
-            class="btn-amicii-outline relative flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-amicii-cream shadow-lg shadow-black/30 sm:px-5 sm:py-2.5 sm:text-sm"
-            aria-label="Abrir carrito de compras"
-          >
-            <svg class="h-4 w-4 text-amicii-gold sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span>Carrito</span>
-            <span id="cart-badge" class="absolute -right-1 -top-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amicii-gold px-1.5 text-[0.65rem] font-bold text-amicii-black">0</span>
-          </button>
         </div>
       </div>
     </header>
     </div>
 
+    <div
+      id="mobile-nav-backdrop"
+      class="fixed inset-0 z-[52] hidden bg-black/45 backdrop-blur-sm md:hidden"
+      aria-hidden="true"
+    ></div>
+    <aside
+      id="mobile-nav-panel"
+      class="fixed inset-y-0 right-0 z-[53] flex w-[min(18rem,88vw)] translate-x-full flex-col border-l border-amicii-gold/30 bg-amicii-ink/95 backdrop-blur-md shadow-2xl transition-transform duration-300 ease-out md:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mobile-nav-title"
+      aria-hidden="true"
+    >
+      <div class="flex items-center justify-between border-b border-amicii-gold/20 px-4 py-3">
+        <p id="mobile-nav-title" class="font-display text-sm font-semibold tracking-wide text-amicii-goldbright">Navegar</p>
+        <button
+          type="button"
+          id="btn-close-mobile-nav"
+          class="rounded-lg p-2 text-amicii-cream/80 transition hover:bg-amicii-tomato/15 hover:text-amicii-cream"
+          aria-label="Cerrar menú"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-0 p-3 text-sm font-semibold uppercase tracking-wider text-amicii-cream/90" aria-label="Secciones">
+        <a href="#menu" class="mobile-nav-link rounded-lg px-3 py-3 transition hover:bg-amicii-tomato/15 hover:text-amicii-goldbright">Menú</a>
+        <a href="#experiencia" class="mobile-nav-link rounded-lg px-3 py-3 transition hover:bg-amicii-tomato/15 hover:text-amicii-goldbright">Experiencia</a>
+      </nav>
+    </aside>
+
     <main class="flex-1">
       <section class="relative overflow-hidden border-b border-amicii-gold/20">
-        <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <div class="mx-auto max-w-7xl px-2 py-8 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
           <div class="max-w-3xl">
             <p class="mb-4 text-xs font-semibold uppercase tracking-[0.4em] text-amicii-goldbright">Desde el horno a su mesa</p>
             <h1 class="font-display text-4xl font-bold leading-tight text-amicii-cream sm:text-5xl lg:text-6xl text-shadow-soft">
@@ -235,7 +329,7 @@
             </p>
             <a
               href="#menu"
-              class="btn-amicii-primary mt-10 inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-bold uppercase tracking-wide"
+              class="btn-amicii-primary mt-6 inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-bold uppercase tracking-wide sm:mt-10"
               >Pedir ahora</a
             >
           </div>
@@ -244,19 +338,19 @@
         <div class="pointer-events-none absolute -left-10 bottom-0 h-64 w-64 rounded-full bg-amicii-gold/5 blur-3xl" aria-hidden="true"></div>
       </section>
 
-      <section id="menu" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section id="menu" class="mx-auto max-w-7xl scroll-mt-24 px-2 pb-16 pt-3 sm:px-6 sm:pb-20 sm:pt-10 lg:px-8 lg:pt-16">
         <div class="text-center">
           <h2 class="font-display text-3xl font-bold text-amicii-goldsoft sm:text-4xl">Nuestras Pizzas Clásicas</h2>
           <p class="mt-3 text-sm font-medium text-amicii-cream/80">Cada plato con nombre, descripción, precio y un clic al carrito</p>
         </div>
-        <div class="mt-16 space-y-20">
+        <div class="mt-6 space-y-16 sm:mt-14 sm:space-y-20 lg:mt-16">
           <div>
             <h3 class="font-display text-2xl font-semibold text-amicii-cream sm:text-3xl">Nuestras Pizzas Clásicas</h3>
             <p class="mt-2 text-sm font-medium text-amicii-cream/85">Clásicas, abundantes muzza y cocción al punto.</p>
-            <div id="grid-pizzas" class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
+            <div id="grid-pizzas" class="mt-5 grid grid-cols-1 gap-4 sm:mt-10 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
           </div>
           <div id="calzones" class="scroll-mt-24">
-            <div class="relative overflow-hidden rounded-3xl border border-amicii-gold/35 bg-gradient-to-br from-amicii-gold/12 via-amicii-card/95 to-amicii-black p-8 shadow-2xl shadow-black/50 sm:p-10">
+            <div class="relative overflow-hidden rounded-3xl border border-amicii-gold/35 bg-gradient-to-br from-amicii-gold/12 via-amicii-card/95 to-amicii-black p-4 shadow-2xl shadow-black/50 sm:p-10">
               <div class="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amicii-gold/15 blur-3xl" aria-hidden="true"></div>
               <div class="pointer-events-none absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-amicii-gold/5 blur-2xl" aria-hidden="true"></div>
               <div class="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch lg:gap-12">
@@ -286,13 +380,13 @@
               </div>
             </div>
             <p class="mt-10 text-center text-sm font-medium text-amicii-cream/85 sm:text-left">Elegí el tuyo abajo: dos recetas, mismo cuidado AMICII.</p>
-            <div id="grid-calzones" class="mt-8 grid max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
+            <div id="grid-calzones" class="mt-8 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 xl:grid-cols-4"></div>
           </div>
         </div>
       </section>
 
-      <section id="experiencia" class="border-t border-amicii-gold/20 bg-amicii-card/50 py-20">
-        <div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
+      <section id="experiencia" class="scroll-mt-24 border-t border-amicii-gold/20 bg-amicii-card/50 py-20">
+        <div class="mx-auto max-w-3xl px-2 text-center sm:px-6">
           <h2 class="font-display text-2xl font-bold text-amicii-goldsoft sm:text-3xl">Una experiencia AMICII</h2>
           <p class="mt-4 text-sm font-medium leading-relaxed text-amicii-cream">
             Masa de fermentación lenta, horno de alta temperatura y el toque de oro de nuestra presentación. Pedí con confianza: el carrito se guarda aunque cierres la pestaña.
@@ -318,7 +412,7 @@
   <button
     type="button"
     id="btn-floating-cart"
-    class="btn-amicii-outline fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full shadow-2xl shadow-black/50 transition hover:scale-105 md:bottom-8 md:right-8"
+    class="btn-amicii-outline fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full shadow-2xl shadow-black/50 transition hover:scale-105"
     aria-label="Abrir carrito"
   >
     <span class="relative">
@@ -612,13 +706,19 @@
 
   function updateScheduleUI() {
     const open = isKitchenOpen();
-    const hSpan = document.querySelector("#hours-status-header span");
-    if (hSpan) {
-      hSpan.textContent = open
+    const mobileStatus = document.getElementById("hours-status-mobile-text");
+    if (mobileStatus) {
+      mobileStatus.textContent = open ? "Abierto" : "Cerrado";
+      mobileStatus.classList.toggle("status-open-neon", open);
+      mobileStatus.classList.toggle("status-closed-red", !open);
+    }
+    const desktopSpan = document.querySelector("#hours-status-header-desktop span");
+    if (desktopSpan) {
+      desktopSpan.textContent = open
         ? "🟢 Abierto ahora (Cierra 23:00 hs)"
         : "🔴 Cerrado (Abre 19:00 hs)";
-      hSpan.classList.toggle("status-open-neon", open);
-      hSpan.classList.toggle("status-closed-red", !open);
+      desktopSpan.classList.toggle("status-open-neon", open);
+      desktopSpan.classList.toggle("status-closed-red", !open);
     }
     const fSpan = document.querySelector("#hours-status-footer span");
     if (fSpan) {
@@ -833,14 +933,17 @@
 
   function updateBadges() {
     const n = cart.reduce((a, l) => a + l.qty, 0);
-    const els = [document.getElementById("cart-badge"), document.getElementById("float-cart-badge")];
-    els.forEach((el) => {
-      if (el) {
-        el.textContent = String(n);
-        el.classList.toggle("hidden", n === 0);
-        if (n > 0) el.classList.remove("scale-0");
-      }
-    });
+    const floatBadge = document.getElementById("float-cart-badge");
+    if (floatBadge) {
+      floatBadge.textContent = String(n);
+      floatBadge.classList.toggle("hidden", n === 0);
+      if (n > 0) floatBadge.classList.remove("scale-0");
+    }
+    const headerBadge = document.getElementById("header-cart-badge");
+    if (headerBadge) {
+      headerBadge.textContent = String(n);
+      headerBadge.classList.toggle("hidden", n === 0);
+    }
   }
 
   function renderProductCard(p) {
@@ -1174,9 +1277,51 @@
     if (del) removeLine(del.dataset.id);
   });
 
-  [document.getElementById("btn-open-cart"), document.getElementById("btn-floating-cart")].forEach((b) => {
-    if (b) b.addEventListener("click", openCart);
+  document.getElementById("btn-floating-cart")?.addEventListener("click", openCart);
+  document.getElementById("btn-header-cart")?.addEventListener("click", openCart);
+
+  const mobileNavPanel = document.getElementById("mobile-nav-panel");
+  const mobileNavBackdrop = document.getElementById("mobile-nav-backdrop");
+  const btnMobileMenu = document.getElementById("btn-mobile-menu");
+  const btnCloseMobileNav = document.getElementById("btn-close-mobile-nav");
+
+  function openMobileNav() {
+    if (!mobileNavPanel || !mobileNavBackdrop || !btnMobileMenu) return;
+    mobileNavPanel.classList.remove("translate-x-full");
+    mobileNavBackdrop.classList.remove("hidden");
+    mobileNavPanel.setAttribute("aria-hidden", "false");
+    btnMobileMenu.setAttribute("aria-expanded", "true");
+    document.body.classList.add("overflow-hidden");
+  }
+
+  function closeMobileNav() {
+    if (!mobileNavPanel || !mobileNavBackdrop || !btnMobileMenu) return;
+    mobileNavPanel.classList.add("translate-x-full");
+    mobileNavBackdrop.classList.add("hidden");
+    mobileNavPanel.setAttribute("aria-hidden", "true");
+    btnMobileMenu.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  btnMobileMenu?.addEventListener("click", () => openMobileNav());
+  btnCloseMobileNav?.addEventListener("click", () => closeMobileNav());
+  mobileNavBackdrop?.addEventListener("click", () => closeMobileNav());
+  document.querySelectorAll(".mobile-nav-link").forEach((a) => {
+    a.addEventListener("click", () => closeMobileNav());
   });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && mobileNavPanel && !mobileNavPanel.classList.contains("translate-x-full")) {
+      closeMobileNav();
+    }
+  });
+
+  const siteHeader = document.getElementById("site-header");
+  function syncHeaderScroll() {
+    if (!siteHeader) return;
+    siteHeader.classList.toggle("header-scrolled", window.scrollY > 32);
+  }
+  window.addEventListener("scroll", syncHeaderScroll, { passive: true });
+  syncHeaderScroll();
   document.getElementById("btn-close-cart").addEventListener("click", closeCart);
   document.getElementById("cart-overlay").addEventListener("click", closeCart);
   document.getElementById("btn-empty-cart").addEventListener("click", emptyCart);
