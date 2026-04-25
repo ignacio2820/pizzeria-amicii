@@ -374,6 +374,7 @@
               Selección de clásicos napolitanos y calzones rellenos, horneados con ingredientes de primera. Pedí fácil y recibí tu pedido por envío o retiro en local.
             </p>
             <a
+              id="btn-primary-cta"
               href="#menu"
               class="btn-amicii-primary mt-6 inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-bold uppercase tracking-wide sm:mt-10"
               >Pedir ahora</a
@@ -586,6 +587,13 @@
       </button>
       <button
         type="button"
+        id="btn-continue-shopping"
+        class="btn-amicii-outline w-full rounded-full py-2.5 text-xs font-semibold uppercase tracking-wide"
+      >
+        Seguir comprando
+      </button>
+      <button
+        type="button"
         id="btn-empty-cart"
         class="btn-amicii-outline w-full rounded-full py-2.5 text-xs font-semibold uppercase tracking-wide"
       >
@@ -659,6 +667,18 @@
             class="mt-1 w-full rounded-xl border border-amicii-gold/25 bg-amicii-black/60 px-3 py-2.5 text-sm font-medium text-amicii-cream placeholder-amicii-cream/35 focus:border-amicii-tomato/60 focus:outline-none focus:ring-1 focus:ring-amicii-tomato/30"
             placeholder="Código (opcional)"
             autocomplete="off"
+          />
+        </div>
+        <div>
+          <label for="clientName" class="text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Nombre completo <span class="text-amicii-tomato">*</span></label>
+          <input
+            type="text"
+            id="clientName"
+            name="clientName"
+            class="mt-1 w-full rounded-xl border border-amicii-gold/25 bg-amicii-black/60 px-3 py-2.5 font-body text-sm font-medium text-amicii-cream placeholder-amicii-cream/35 focus:border-amicii-tomato/60 focus:outline-none focus:ring-1 focus:ring-amicii-tomato/30"
+            placeholder="Escribí tu nombre completo"
+            autocomplete="name"
+            required
           />
         </div>
         <div class="flex flex-col gap-3 sm:flex-row">
@@ -832,6 +852,10 @@
       proceed.textContent = open
         ? (proceed.getAttribute("data-label-open") || "Ir al checkout")
         : (proceed.getAttribute("data-label-closed") || "Completar reserva");
+    }
+    const primaryCta = document.getElementById("btn-primary-cta");
+    if (primaryCta) {
+      primaryCta.textContent = open ? "Pedir ahora" : "Hacer Reserva";
     }
   }
 
@@ -1084,6 +1108,20 @@
     renderCart();
   }
 
+  function showAddedFeedback(btn) {
+    if (!btn) return;
+    if (btn.dataset.feedbackActive === "1") return;
+    btn.dataset.feedbackActive = "1";
+    const original = btn.textContent;
+    btn.textContent = "¡Agregado!";
+    btn.classList.add("brightness-110", "scale-[1.03]");
+    setTimeout(() => {
+      btn.textContent = original || "Agregar";
+      btn.classList.remove("brightness-110", "scale-[1.03]");
+      delete btn.dataset.feedbackActive;
+    }, 700);
+  }
+
   function setQty(id, delta) {
     const line = cart.find((l) => l.id === id);
     if (!line) return;
@@ -1238,10 +1276,15 @@
 
   function getCheckoutData() {
     const form = document.getElementById("checkout-form");
+    const clientName = (form.clientName && form.clientName.value) ? form.clientName.value.trim() : "";
     const entrega = form.querySelector('input[name="entrega"]:checked')?.value || "";
     const pago = form.querySelector('input[name="pago"]:checked')?.value || "";
     const cupon = (form.cupon && form.cupon.value) ? form.cupon.value.trim() : "";
     const direccion = form.direccion && form.direccion.value ? form.direccion.value.trim() : "";
+    if (!clientName) {
+      alert("Escribí tu nombre completo para continuar.");
+      return null;
+    }
     if (!entrega) {
       alert("Elegí un método de entrega.");
       return null;
@@ -1266,6 +1309,7 @@
       horaReserva = selH.value;
     }
     return {
+      clientName,
       entrega,
       pago,
       cupon,
@@ -1277,6 +1321,8 @@
   function buildWhatsappText(checkout) {
     const t = computeTotals();
     const lines = [];
+    lines.push(`Hola, soy ${checkout.clientName}. Quiero realizar el siguiente pedido.`);
+    lines.push("");
     if (forceReservaWhatsapp || !isKitchenOpen()) {
       lines.push("*" + RESERVA_WHATSAPP_TAG + "*");
       lines.push("");
@@ -1360,14 +1406,14 @@
     const btn = e.target.closest(".add-to-cart");
     if (btn && btn.dataset.id) {
       addToCart(btn.dataset.id);
-      openCart();
+      showAddedFeedback(btn);
     }
   });
   document.getElementById("grid-calzones").addEventListener("click", (e) => {
     const btn = e.target.closest(".add-to-cart");
     if (btn && btn.dataset.id) {
       addToCart(btn.dataset.id);
-      openCart();
+      showAddedFeedback(btn);
     }
   });
 
@@ -1429,6 +1475,7 @@
   window.addEventListener("scroll", syncHeaderScroll, { passive: true });
   syncHeaderScroll();
   document.getElementById("btn-close-cart").addEventListener("click", closeCart);
+  document.getElementById("btn-continue-shopping").addEventListener("click", closeCart);
   document.getElementById("cart-overlay").addEventListener("click", closeCart);
   document.getElementById("btn-empty-cart").addEventListener("click", emptyCart);
   document.getElementById("btn-proceed-checkout").addEventListener("click", openCheckout);
@@ -1478,7 +1525,7 @@
   const WELCOME_RETURNING =
     "¡Qué bueno verte de nuevo! ¿Te quedaste con ganas de otra porción o probamos algo distinto hoy?";
   const WELCOME_CLOSED =
-    "¡Benvenuti! El horno descansa por ahora y vuelve a encenderse de 19:00 a 23:00 hs. Si querés, dejamos tu pedido programado para que salga del horno apenas abrimos.";
+    "¡Hola! 🌙 Aunque nuestros hornos están descansando, ya podés dejar tu pedido programado o reserva para mañana. ¡Asegurá tu lugar y sé el primero en recibir tu pizza!";
   const TIP = "Toque de la casa: con 2 pizzas, tus calzones llevan 20% de descuento.";
 
   function appendChatMessage(text, fromBot) {
