@@ -568,7 +568,7 @@
         <span>Subtotal</span>
         <span id="cart-subtotal">$0</span>
       </div>
-      <div id="discount-line" class="hidden flex items-center justify-between text-sm text-green-300/90">
+      <div id="discount-line" class="hidden items-center justify-between text-sm text-green-300/90">
         <span>Descuento (calzones, promo 2 pizzas)</span>
         <span id="cart-discount">$0</span>
       </div>
@@ -604,7 +604,7 @@
 
   <div
     id="checkout-modal"
-    class="fixed inset-0 z-[70] hidden opacity-0 items-center justify-center p-4 transition-opacity duration-300 ease-in-out"
+    class="fixed inset-0 z-[70] hidden items-center justify-center p-4"
     role="dialog"
     aria-modal="true"
     aria-labelledby="checkout-title"
@@ -707,7 +707,7 @@
 
   <div
     id="reservation-confirm-modal"
-    class="fixed inset-0 z-[80] hidden opacity-0 items-center justify-center p-4 transition-opacity duration-300 ease-in-out"
+    class="fixed inset-0 z-[80] hidden items-center justify-center p-4"
     role="dialog"
     aria-modal="true"
     aria-labelledby="reservation-confirm-title"
@@ -770,7 +770,7 @@
   const RESERVA_WHATSAPP_TAG = "[RESERVA FUERA DE HORARIO - ENTREGA PROGRAMADA 19:00 HS]";
   const SFX = {
     add: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
-    remove: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_7f4f8f9f84.mp3?filename=paper-slide-101590.mp3",
+    remove: "https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3",
   };
   let forceReservaWhatsapp = false;
   let audioReady = false;
@@ -1209,9 +1209,11 @@
     const disc = document.getElementById("discount-line");
     if (t.calzoneDiscount > 0) {
       disc.classList.remove("hidden");
+      disc.classList.add("flex");
       document.getElementById("cart-discount").textContent = "−" + formatMoney(t.calzoneDiscount);
     } else {
       disc.classList.add("hidden");
+      disc.classList.remove("flex");
     }
     document.getElementById("cart-total").textContent = formatMoney(t.total);
     listEl.innerHTML = cart
@@ -1276,14 +1278,32 @@
     closeCart();
     document.getElementById("checkout-form").reset();
     document.getElementById("field-direccion").classList.add("hidden");
-    document.getElementById("checkout-modal").classList.remove("hidden");
-    document.getElementById("checkout-modal").classList.add("flex");
+    const modal = document.getElementById("checkout-modal");
+    const content = document.getElementById("checkout-modal-content");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    modal.style.opacity = "0";
+    if (content) { content.style.transform = "scale(0.94)"; content.style.transition = "transform 0.28s cubic-bezier(0.34,1.56,0.64,1)"; }
+    requestAnimationFrame(() => {
+      modal.style.transition = "opacity 0.22s ease";
+      modal.style.opacity = "1";
+      if (content) content.style.transform = "scale(1)";
+    });
     updateScheduleUI();
   }
 
   function closeCheckout() {
-    document.getElementById("checkout-modal").classList.add("hidden");
-    document.getElementById("checkout-modal").classList.remove("flex");
+    const modal = document.getElementById("checkout-modal");
+    const content = document.getElementById("checkout-modal-content");
+    modal.style.transition = "opacity 0.18s ease";
+    modal.style.opacity = "0";
+    if (content) { content.style.transition = "transform 0.18s ease"; content.style.transform = "scale(0.96)"; }
+    setTimeout(() => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      modal.style.opacity = "";
+      if (content) { content.style.transform = ""; content.style.transition = ""; }
+    }, 185);
   }
 
   function getCheckoutData() {
@@ -1369,15 +1389,31 @@
 
   function openReservationConfirm() {
     const m = document.getElementById("reservation-confirm-modal");
+    const mc = document.getElementById("reservation-modal-content");
     m.classList.remove("hidden");
     m.classList.add("flex");
+    m.style.opacity = "0";
+    if (mc) { mc.style.transform = "scale(0.94)"; mc.style.transition = "transform 0.28s cubic-bezier(0.34,1.56,0.64,1)"; }
+    requestAnimationFrame(() => {
+      m.style.transition = "opacity 0.22s ease";
+      m.style.opacity = "1";
+      if (mc) mc.style.transform = "scale(1)";
+    });
   }
 
   function closeReservationConfirm() {
     const m = document.getElementById("reservation-confirm-modal");
-    m.classList.add("hidden");
-    m.classList.remove("flex");
-    forceReservaWhatsapp = false;
+    const mc = document.getElementById("reservation-modal-content");
+    m.style.transition = "opacity 0.18s ease";
+    m.style.opacity = "0";
+    if (mc) { mc.style.transition = "transform 0.18s ease"; mc.style.transform = "scale(0.96)"; }
+    setTimeout(() => {
+      m.classList.add("hidden");
+      m.classList.remove("flex");
+      m.style.opacity = "";
+      if (mc) { mc.style.transform = ""; mc.style.transition = ""; }
+      forceReservaWhatsapp = false;
+    }, 185);
   }
 
   async function doSendWhatsapp() {
