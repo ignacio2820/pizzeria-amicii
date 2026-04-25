@@ -1107,10 +1107,11 @@
     playSfx("add");
     updateBadges();
     renderCart();
-    if (!isKitchenOpen()) {
-      showChat();
-      appendBotTypingMessage("Excelente elección 👨‍🍳🍕 Lo anoto para tu reserva. ¡Mañana va a estar increíble! ✨", 720);
-    }
+    // Removing auto-chat on add to cart
+    // if (!isKitchenOpen()) {
+    //   showChat();
+    //   appendBotTypingMessage("Excelente elección 👨‍🍳🍕 Lo anoto para tu reserva. ¡Mañana va a estar increíble! ✨", 720);
+    // }
     maybeTriggerPromoHint();
   }
 
@@ -1605,8 +1606,11 @@
     }
     if (promoHintShown) return;
     promoHintShown = true;
-    showChat();
-    appendBotTypingMessage("¡Toque de la casa! 👨‍🍳 Veo que llevás 2 pizzas... ¡aprovechá que hoy tus calzones tienen un 20% de descuento! 🇮🇹", 1500);
+    
+    // Only show promo text if chat is already open, do not force open
+    if (chatOpen.value && !document.getElementById("chat-panel").classList.contains("hidden")) {
+      appendBotTypingMessage("¡Toque de la casa! 👨‍🍳 Veo que llevás 2 pizzas... ¡aprovechá que hoy tus calzones tienen un 20% de descuento! 🇮🇹", 1500);
+    }
   }
 
   function chefReplyByIntent(userText) {
@@ -1734,12 +1738,14 @@
       document.getElementById("chat-panel").classList.add("hidden");
       chatOpen.value = false;
       stopCompanionMessages();
+      sessionStorage.setItem("amicii-chat-closed", "1");
     }
   });
   document.getElementById("btn-close-chat").addEventListener("click", () => {
     document.getElementById("chat-panel").classList.add("hidden");
     chatOpen.value = false;
     stopCompanionMessages();
+    sessionStorage.setItem("amicii-chat-closed", "1");
   });
 
   const horaInit = document.getElementById("cart-reserva-hora");
@@ -1766,10 +1772,10 @@
     }, 1000);
     setInterval(updateScheduleUI, 60000);
     setTimeout(() => {
-      if (!window.__amiciiChatInit && !isKitchenOpen()) {
+      if (!window.__amiciiChatInit && !sessionStorage.getItem("amicii-chat-closed")) {
         showChat();
       }
-    }, 400);
+    }, 5000);
   });
 
   updateScheduleUI();
