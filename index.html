@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Amicii Pizzería — Pizzas y calzones artesanales. Pedí por WhatsApp." />
+  <title>Amicii Pizzería | Arte & Sabor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            amicii: {
+              black: "#0a0a0a",
+              charcoal: "#121212",
+              gold: "#c9a96e",
+              goldsoft: "#d4bc8c",
+              cream: "#f5f0e8",
+            },
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', "Georgia", "serif"],
+            body: ['Montserrat', "system-ui", "sans-serif"],
+          },
+          backgroundImage: {
+            "stone-dark": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E\"), linear-gradient(180deg, #0a0a0a 0%25, #141210 50%25, #0a0a0a 100%25)",
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #c9a96e;
+      --cream: #f5f0e8;
+    }
+    body {
+      font-family: Montserrat, system-ui, sans-serif;
+    }
+    .font-display {
+      font-family: "Playfair Display", Georgia, serif;
+    }
+    .wood-stone-bg {
+      background-color: #0a0a0a;
+      background-image:
+        url("https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=1920&q=80"),
+        linear-gradient(180deg, rgba(10, 10, 10, 0.97) 0%, rgba(18, 16, 14, 0.95) 50%, rgba(10, 10, 10, 0.97) 100%);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-blend-mode: multiply;
+    }
+    .grain::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      z-index: 0;
+    }
+    .text-shadow-soft {
+      text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+    }
+    #cart-panel {
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .chat-bubble-typing::after {
+      content: "▋";
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    .pizza-card-image {
+      transform: scale(1);
+      will-change: transform;
+      transition: transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .pizza-card:hover .pizza-card-image {
+      transform: scale(1.08);
+    }
+    .cart-line {
+      transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1), transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .cart-line.cart-line--leaving {
+      opacity: 0;
+      transform: scale(0.98) translateX(-6px);
+    }
+    #fomo-mins.fomo-tick,
+    #fomo-plural.fomo-tick {
+      opacity: 0.5;
+    }
+    #fomo-mins,
+    #fomo-plural {
+      transition: opacity 0.3s ease, color 0.2s ease;
+    }
+  </style>
+  <!-- Horario: 19:00–23:00 local (navegador) -->
+</head>
+<body class="wood-stone-bg min-h-screen text-amicii-cream antialiased">
+  <div class="grain relative z-10 min-h-screen flex flex-col">
+    <div class="sticky top-0 z-50 w-full">
+      <div
+        id="fomo-banner"
+        class="hidden w-full border-b border-amicii-gold/35 bg-gradient-to-r from-[#0a0a0a] via-[#1a150c] to-[#0a0a0a] shadow-md shadow-black/30"
+        role="status"
+        aria-live="polite"
+      >
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-1.5 px-3 py-2.5 text-center sm:px-4 sm:py-3 sm:text-left">
+          <p id="fomo-line" class="max-w-2xl text-[0.7rem] font-medium leading-relaxed text-amicii-cream/95 sm:text-sm">
+            <span
+              >Abrimos en </span
+            ><span
+              id="fomo-mins"
+              class="fomo-digits inline-block min-w-[1.1em] tabular-nums font-bold text-amicii-gold"
+              >0</span
+            ><span id="fomo-plural"> minutos</span
+            ><span
+              >. ¡Sé el primero en la fila reservando ahora!</span
+            >
+          </p>
+        </div>
+      </div>
+    <header class="border-b border-amicii-gold/20 bg-amicii-black/60 backdrop-blur-md z-40">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-20 flex-wrap items-center justify-between gap-y-2">
+          <a href="#" class="group flex min-w-0 items-center gap-2 sm:gap-3">
+            <span class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-amicii-cream">Amicii</span>
+            <span class="hidden sm:inline h-6 w-px flex-shrink-0 bg-amicii-gold/40" aria-hidden="true"></span>
+            <span class="hidden sm:inline text-xs font-medium uppercase tracking-[0.3em] text-amicii-goldsoft/90">Pizzería</span>
+          </a>
+          <div
+            id="hours-status-header"
+            class="order-3 w-full text-center sm:order-none sm:mx-4 sm:w-auto sm:max-w-[200px] md:max-w-none"
+            role="status"
+            aria-live="polite"
+            title="Horario de atención: 19:00 a 23:00"
+          >
+            <span class="inline-flex items-center justify-center gap-2 rounded-full border border-amicii-gold/20 bg-amicii-black/50 px-3 py-1.5 text-[0.7rem] font-medium text-amicii-cream/90 sm:px-4 sm:text-xs"
+              >…</span
+            >
+          </div>
+          <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-amicii-cream/90">
+            <a href="#menu" class="hover:text-amicii-gold transition-colors">Menú</a>
+            <a href="#experiencia" class="hover:text-amicii-gold transition-colors">Experiencia</a>
+          </nav>
+          <button
+            type="button"
+            id="btn-open-cart"
+            class="relative flex items-center gap-2 rounded-full border border-amicii-gold/40 bg-amicii-charcoal/80 px-5 py-2.5 text-sm font-semibold text-amicii-cream shadow-lg shadow-black/30 transition hover:border-amicii-gold hover:bg-amicii-gold/10"
+            aria-label="Abrir carrito de compras"
+          >
+            <svg class="h-5 w-5 text-amicii-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span>Carrito</span>
+            <span id="cart-badge" class="absolute -top-1 -right-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amicii-gold px-1.5 text-[0.65rem] font-bold text-amicii-black">0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+    </div>
+
+    <main class="flex-1">
+      <section class="relative overflow-hidden border-b border-amicii-gold/15">
+        <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <div class="max-w-3xl">
+            <p class="mb-4 text-xs font-semibold uppercase tracking-[0.4em] text-amicii-gold">Desde el horno a su mesa</p>
+            <h1 class="font-display text-4xl font-bold leading-tight text-amicii-cream sm:text-5xl lg:text-6xl text-shadow-soft">
+              Amicii: sabor auténtico,<br class="hidden sm:block" />
+              <span class="text-amicii-goldsoft">masa artesanal & corazón italiano</span>
+            </h1>
+            <p class="mt-6 max-w-xl text-base leading-relaxed text-amicii-cream/75">
+              Selección de clásicos napolitanos y calzones rellenos, horneados con ingredientes de primera. Pedí fácil y recibí tu pedido por envío o retiro en local.
+            </p>
+            <a href="#menu" class="mt-10 inline-flex items-center gap-2 rounded-full border border-amicii-gold/50 bg-amicii-gold/15 px-8 py-3.5 text-sm font-semibold text-amicii-cream transition hover:bg-amicii-gold/25">Ver el menú</a>
+          </div>
+        </div>
+        <div class="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-amicii-gold/5 blur-3xl" aria-hidden="true"></div>
+      </section>
+
+      <section id="menu" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h2 class="font-display text-3xl font-bold text-amicii-cream sm:text-4xl">Menú</h2>
+          <p class="mt-3 text-sm text-amicii-cream/60">Cada plato con nombre, descripción, precio y un clic al carrito</p>
+        </div>
+        <div class="mt-16 space-y-20">
+          <div>
+            <h3 class="font-display text-2xl font-semibold text-amicii-gold">Pizzas</h3>
+            <p class="mt-2 text-sm text-amicii-cream/55">Clásicas, abundantes muzza y cocción al punto.</p>
+            <div id="grid-pizzas" class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"></div>
+          </div>
+          <div id="calzones" class="scroll-mt-24">
+            <div class="relative overflow-hidden rounded-3xl border border-amicii-gold/35 bg-gradient-to-br from-amicii-gold/10 via-amicii-black/70 to-[#0a0a0a] p-8 shadow-2xl shadow-black/40 sm:p-10">
+              <div class="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amicii-gold/15 blur-3xl" aria-hidden="true"></div>
+              <div class="pointer-events-none absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-amicii-gold/5 blur-2xl" aria-hidden="true"></div>
+              <div class="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch lg:gap-12">
+                <div class="flex flex-col justify-center">
+                  <p class="text-xs font-semibold uppercase tracking-[0.4em] text-amicii-gold">Especialidad del horno</p>
+                  <h3 class="mt-4 font-display text-3xl font-bold leading-tight text-amicii-cream sm:text-4xl">Calzones artesanales</h3>
+                  <p class="mt-5 text-sm leading-relaxed text-amicii-cream/80">
+                    <span class="font-semibold text-amicii-goldsoft">¿Todavía no probaste un calzone?</span> Podés imaginarlo como una
+                    <strong class="font-semibold text-amicii-cream">pizza doblada al horno</strong>: la misma masa, rellenada, doblada y horneada hasta que quede
+                    <em class="not-italic text-amicii-cream/90">dorada por fuera y tierna por dentro</em>, con el queso fundido atrapado en el centro. Un formato distinto, mismo amor de siempre.
+                  </p>
+                </div>
+                <div class="flex flex-col justify-center rounded-2xl border border-amicii-gold/25 bg-amicii-black/50 p-6 ring-1 ring-inset ring-amicii-gold/10 sm:p-8">
+                  <p class="font-display text-xl text-amicii-gold sm:text-2xl">Pizza doblada al horno</p>
+                  <p class="mt-3 text-sm leading-relaxed text-amicii-cream/65">Así de simple: toda la experiencia de una pizza, en un paquete crujiente. Perfecto para quien quiere probar algo nuevo sin salir de lo clásico.</p>
+                  <ul class="mt-6 space-y-3 text-sm text-amicii-cream/85" role="list">
+                    <li class="flex gap-3">
+                      <span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-amicii-gold" aria-hidden="true"></span>
+                      Masa artesanal, relleno abundante y sellado al horno
+                    </li>
+                    <li class="flex gap-3">
+                      <span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-amicii-gold" aria-hidden="true"></span>
+                      Sabor concentrado: cada corte, queso que se estira
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p class="mt-10 text-center text-sm text-amicii-cream/60 sm:text-left">Elegí el tuyo abajo: dos recetas, mismo cuidado Amicii.</p>
+            <div id="grid-calzones" class="mt-8 grid max-w-5xl gap-8 sm:grid-cols-2"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="experiencia" class="border-t border-amicii-gold/15 bg-amicii-black/40 py-20">
+        <div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
+          <h2 class="font-display text-2xl font-bold text-amicii-cream">Una experiencia Amicii</h2>
+          <p class="mt-4 text-sm leading-relaxed text-amicii-cream/65">
+            Masa de fermentación lenta, horno de alta temperatura y el toque de oro de nuestra presentación. Pedí con confianza: el carrito se guarda aunque cierres la pestaña.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-amicii-gold/20 bg-amicii-black/80 py-10 text-center text-xs text-amicii-cream/50">
+      <p class="font-display text-sm text-amicii-gold/90">Amicii Pizzería</p>
+      <div
+        id="hours-status-footer"
+        class="mt-3 flex justify-center"
+        role="status"
+        aria-live="polite"
+      >
+        <span class="text-[0.7rem] sm:text-xs">…</span>
+      </div>
+      <p class="mt-2">© 2026 · Hecho con pasión y buena masa.</p>
+    </footer>
+  </div>
+
+  <button
+    type="button"
+    id="btn-floating-cart"
+    class="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full border-2 border-amicii-gold/50 bg-amicii-charcoal shadow-2xl shadow-black/50 transition hover:scale-105 hover:border-amicii-gold md:bottom-8 md:right-8"
+    aria-label="Abrir carrito"
+  >
+    <span class="relative">
+      <svg class="h-7 w-7 text-amicii-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+      <span id="float-cart-badge" class="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amicii-gold px-1.5 text-[0.65rem] font-bold text-amicii-black">0</span>
+    </span>
+  </button>
+
+  <div
+    id="chat-widget"
+    class="fixed bottom-6 left-6 z-50 flex max-w-sm flex-col items-start gap-3 md:bottom-8 md:left-8"
+  >
+    <div
+      id="chat-panel"
+      class="hidden w-full max-w-sm overflow-hidden rounded-2xl border border-amicii-gold/30 bg-amicii-charcoal/95 shadow-2xl shadow-black/40 backdrop-blur-md"
+    >
+      <div class="flex items-center gap-3 border-b border-amicii-gold/20 bg-amicii-black/50 px-4 py-3">
+        <div class="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border-2 border-amicii-gold/50 bg-amicii-black">
+          <img
+            src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=200&q=80"
+            alt="Maestro Pizzero"
+            class="h-full w-full object-cover"
+            width="48"
+            height="48"
+          />
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-amicii-cream">Maestro Pizzero</p>
+          <p class="text-xs text-amicii-goldsoft/80">Guía Amicii</p>
+        </div>
+        <button type="button" id="btn-close-chat" class="ml-auto rounded-lg p-1.5 text-amicii-cream/60 hover:bg-amicii-gold/10 hover:text-amicii-cream" aria-label="Cerrar chat">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <div id="chat-messages" class="max-h-72 min-h-[180px] space-y-3 overflow-y-auto p-4 text-sm text-amicii-cream/90"></div>
+    </div>
+    <button
+      type="button"
+      id="btn-chat-bubble"
+      class="group flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-amicii-gold/50 bg-amicii-charcoal shadow-2xl shadow-black/50 transition hover:scale-105 hover:border-amicii-gold"
+      title="Hablar con el Maestro Pizzero"
+      aria-label="Abrir asistente Maestro Pizzero"
+    >
+      <img
+        src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=200&q=80"
+        alt=""
+        class="h-full w-full object-cover"
+        width="64"
+        height="64"
+      />
+    </button>
+  </div>
+
+  <div
+    id="cart-overlay"
+    class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm transition-opacity"
+    aria-hidden="true"
+  ></div>
+  <aside
+    id="cart-panel"
+    class="fixed right-0 top-0 z-[60] flex h-full w-full max-w-md translate-x-full flex-col border-l border-amicii-gold/20 bg-gradient-to-b from-[#0f0f0f] to-[#0a0a0a] shadow-2xl"
+    role="dialog"
+    aria-labelledby="cart-title"
+    aria-modal="true"
+  >
+    <div class="flex items-center justify-between border-b border-amicii-gold/20 px-5 py-4">
+      <h2 id="cart-title" class="font-display text-xl font-bold text-amicii-cream">Tu pedido</h2>
+      <button type="button" id="btn-close-cart" class="rounded-lg p-2 text-amicii-cream/70 hover:bg-amicii-gold/10 hover:text-amicii-cream" aria-label="Cerrar carrito">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+    </div>
+    <div id="cart-empty" class="flex flex-1 flex-col items-center justify-center p-8 text-center text-sm text-amicii-cream/50">
+      <p>Tu carrito está vacío.</p>
+      <p class="mt-2 text-xs">Agregá deliciosas pizzas o un calzone artesanal.</p>
+    </div>
+    <div id="cart-list" class="hidden flex-1 overflow-y-auto p-4"></div>
+    <div id="cart-footer" class="hidden border-t border-amicii-gold/20 p-4 space-y-3">
+      <p id="promo-line" class="text-xs text-amicii-gold/90 hidden"></p>
+      <div
+        id="cart-reserva-block"
+        class="hidden space-y-2 rounded-xl border border-amicii-gold/25 bg-amicii-gold/5 p-3 ring-1 ring-inset ring-amicii-gold/10"
+        role="group"
+        aria-labelledby="cart-reserva-label"
+      >
+        <label id="cart-reserva-label" for="cart-reserva-hora" class="block text-xs font-semibold uppercase tracking-wider text-amicii-gold/95">
+          ¿A qué hora quieres recibir/retirar tu pedido? <span class="text-red-400" aria-hidden="true">*</span>
+        </label>
+        <select
+          id="cart-reserva-hora"
+          name="hora_reserva"
+          class="w-full cursor-pointer rounded-xl border border-amicii-gold/30 bg-[#0d0d0d] px-3 py-2.5 text-sm font-medium text-amicii-cream shadow-inner shadow-black/20 transition hover:border-amicii-gold/50 focus:border-amicii-gold/60 focus:outline-none focus:ring-1 focus:ring-amicii-gold/40"
+        >
+          <option value="" selected disabled>Seleccionar hora</option>
+          <option value="19:00">19:00</option>
+          <option value="19:15">19:15</option>
+          <option value="19:30">19:30</option>
+          <option value="19:45">19:45</option>
+          <option value="20:00">20:00</option>
+          <option value="20:15">20:15</option>
+        </select>
+        <p class="text-[0.65rem] text-amicii-cream/45">Intervalos aprox. según carga de cocina.</p>
+      </div>
+      <div class="flex items-center justify-between text-sm text-amicii-cream/80">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0</span>
+      </div>
+      <div id="discount-line" class="hidden flex items-center justify-between text-sm text-green-300/90">
+        <span>Descuento (calzones, promo 2 pizzas)</span>
+        <span id="cart-discount">$0</span>
+      </div>
+      <div class="flex items-center justify-between border-t border-amicii-gold/15 pt-3">
+        <span class="font-semibold text-amicii-cream">Total</span>
+        <span id="cart-total" class="text-lg font-bold text-amicii-gold">$0</span>
+      </div>
+      <button
+        type="button"
+        id="btn-proceed-checkout"
+        class="w-full rounded-full bg-amicii-gold py-3.5 text-sm font-bold text-amicii-black transition hover:brightness-110"
+        data-label-open="Ir al checkout"
+        data-label-closed="Completar reserva"
+      >
+        Ir al checkout
+      </button>
+      <button
+        type="button"
+        id="btn-empty-cart"
+        class="w-full rounded-full border border-amicii-gold/30 py-2.5 text-xs font-medium text-amicii-cream/80 hover:border-amicii-gold/50"
+      >
+        Vaciar carrito
+      </button>
+    </div>
+  </aside>
+
+  <div
+    id="checkout-modal"
+    class="fixed inset-0 z-[70] hidden items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="checkout-title"
+  >
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" id="checkout-backdrop"></div>
+    <div class="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-amicii-gold/25 bg-gradient-to-b from-[#121212] to-[#0a0a0a] p-6 shadow-2xl">
+      <h2 id="checkout-title" class="font-display text-2xl font-bold text-amicii-cream">Finalizar pedido</h2>
+      <p class="mt-2 text-xs text-amicii-cream/55">Completá envío, pago y cupón antes de enviar el pedido por WhatsApp.</p>
+      <p
+        id="checkout-reserva-notice"
+        class="mt-4 hidden rounded-xl border border-amicii-gold/25 bg-amicii-gold/10 px-3 py-2.5 text-xs leading-relaxed text-amicii-cream/80"
+        role="status"
+      >
+        <span class="font-semibold text-amicii-gold">Cocina fuera de horario.</span> Estás armando un pedido
+        <strong>reservado</strong> para atención desde las <span class="text-amicii-goldsoft">19:00 hs</span> (o retiro/entrega según coordinen por WhatsApp).
+      </p>
+      <form id="checkout-form" class="mt-6 space-y-6">
+        <div>
+          <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-gold">Entrega <span class="text-red-400">*</span></p>
+          <div class="space-y-2">
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/20 bg-amicii-black/40 p-3 hover:border-amicii-gold/40 has-[:checked]:border-amicii-gold/50">
+              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 text-amicii-gold" required />
+              <span class="text-sm">Envío a domicilio</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/20 bg-amicii-black/40 p-3 hover:border-amicii-gold/40 has-[:checked]:border-amicii-gold/50">
+              <input type="radio" name="entrega" value="retiro" class="h-4 w-4 text-amicii-gold" required />
+              <span class="text-sm">Retiro en local</span>
+            </label>
+          </div>
+          <div id="field-direccion" class="mt-3 hidden">
+            <label for="direccion" class="text-xs text-amicii-cream/60">Dirección completa <span class="text-red-400">*</span></label>
+            <textarea
+              id="direccion"
+              name="direccion"
+              rows="2"
+              class="mt-1 w-full rounded-xl border border-amicii-gold/20 bg-amicii-black/50 px-3 py-2 text-sm text-amicii-cream placeholder-amicii-cream/30 focus:border-amicii-gold/50 focus:outline-none"
+              placeholder="Calle, número, piso, barrio, referencia..."
+            ></textarea>
+          </div>
+        </div>
+        <div>
+          <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-gold">Pago <span class="text-red-400">*</span></p>
+          <div class="space-y-2">
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/20 bg-amicii-black/40 p-3 hover:border-amicii-gold/40 has-[:checked]:border-amicii-gold/50">
+              <input type="radio" name="pago" value="local" class="h-4 w-4 text-amicii-gold" required />
+              <span class="text-sm">Pago en el local (efectivo o tarjeta al retirar/recibir)</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/20 bg-amicii-black/40 p-3 hover:border-amicii-gold/40 has-[:checked]:border-amicii-gold/50">
+              <input type="radio" name="pago" value="mercadopago" class="h-4 w-4 text-amicii-gold" required />
+              <span class="text-sm">Mercado Pago</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label for="cupon" class="text-xs font-semibold uppercase tracking-wider text-amicii-gold">Cupón de descuento</label>
+          <input
+            type="text"
+            id="cupon"
+            name="cupon"
+            class="mt-1 w-full rounded-xl border border-amicii-gold/20 bg-amicii-black/50 px-3 py-2.5 text-sm text-amicii-cream placeholder-amicii-cream/30 focus:border-amicii-gold/50 focus:outline-none"
+            placeholder="Código (opcional)"
+            autocomplete="off"
+          />
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <button
+            type="button"
+            id="btn-checkout-cancel"
+            class="flex-1 rounded-full border border-amicii-gold/30 py-3 text-sm font-medium text-amicii-cream/90 hover:border-amicii-gold/50"
+          >
+            Volver
+          </button>
+          <button
+            type="button"
+            id="btn-whatsapp"
+            class="flex-1 rounded-full bg-[#25D366] py-3 text-sm font-bold text-white transition hover:brightness-110"
+            data-label-open="Finalizar pedido por WhatsApp"
+            data-label-closed="Reservar para las 19:00 hs"
+          >
+            Finalizar pedido por WhatsApp
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    id="reservation-confirm-modal"
+    class="fixed inset-0 z-[80] hidden items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="reservation-confirm-title"
+  >
+    <div class="absolute inset-0 bg-[#040404]/80 backdrop-blur-md" id="reservation-confirm-backdrop" aria-hidden="true"></div>
+    <div
+      class="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-amicii-gold/35 bg-gradient-to-b from-[#141210] via-[#0e0d0b] to-[#0a0a0a] shadow-[0_24px_64px_rgba(0,0,0,0.65)]"
+    >
+      <div
+        class="bg-gradient-to-r from-amicii-gold/15 to-transparent px-6 pb-4 pt-5 text-left border-b border-amicii-gold/20"
+      >
+        <p class="text-[0.65rem] font-semibold uppercase tracking-[0.4em] text-amicii-gold/90">Amicii · reserva</p>
+        <h2 id="reservation-confirm-title" class="font-display mt-2 text-2xl font-bold leading-tight text-amicii-cream sm:text-3xl">
+          Confirmar pedido programado
+        </h2>
+      </div>
+      <div class="space-y-4 px-6 py-5 text-sm text-amicii-cream/75">
+        <p>
+          Ahora la cocina está <strong class="text-amicii-cream/95">cerrada</strong>. Tu pedido se registrará con la etiqueta de
+          <span class="font-semibold text-amicii-goldsoft">entrega/retiro priorizado desde las 19:00 hs</span>, al abrir el servicio.
+        </p>
+        <p class="text-xs text-amicii-cream/50">Podés ajustar detalles (domicilio, pago) por WhatsApp si hace falta.</p>
+      </div>
+      <div class="flex flex-col gap-2 border-t border-amicii-gold/15 bg-amicii-black/40 px-6 py-4 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          id="btn-reservation-cancel"
+          class="order-2 rounded-full border border-amicii-gold/30 px-5 py-2.5 text-sm font-medium text-amicii-cream/90 transition hover:border-amicii-gold/50 sm:order-1"
+        >
+          Volver al formulario
+        </button>
+        <button
+          type="button"
+          id="btn-reservation-confirm-whatsapp"
+          class="order-1 inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-110 sm:order-2"
+        >
+          <span aria-hidden="true">➤</span>
+          Enviar por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  "use strict";
+  /** Carrito: localStorage */
+  const LS_KEY = "amicii-cart";
+  const LS_HORA = "amicii-reserva-hora";
+  /** Código de país + número sin + ni 0 (ej. Argentina: 54 + sin 0 del área) */
+  const WHATSAPP_E164 = "5491112345678";
+  let lastFomoMinuteVal = -1;
+
+  const OPEN_HOUR = 19;
+  const CLOSE_HOUR = 23;
+  const RESERVA_WHATSAPP_TAG = "[RESERVA FUERA DE HORARIO - ENTREGA PROGRAMADA 19:00 HS]";
+  let forceReservaWhatsapp = false;
+
+  function isKitchenOpen() {
+    const m = new Date();
+    const mins = m.getHours() * 60 + m.getMinutes();
+    return mins >= OPEN_HOUR * 60 && mins < CLOSE_HOUR * 60;
+  }
+
+  function updateScheduleUI() {
+    const open = isKitchenOpen();
+    const hSpan = document.querySelector("#hours-status-header span");
+    if (hSpan) {
+      hSpan.textContent = open
+        ? "🟢 Abierto ahora (Cierra 23:00 hs)"
+        : "🔴 Cerrado (Abre 19:00 hs)";
+    }
+    const fSpan = document.querySelector("#hours-status-footer span");
+    if (fSpan) {
+      fSpan.textContent = open
+        ? "🟢 Abierto ahora (Cierra 23:00 hs)"
+        : "🔴 Cerrado (Abre 19:00 hs)";
+    }
+    const btnWa = document.getElementById("btn-whatsapp");
+    if (btnWa) {
+      btnWa.textContent = open
+        ? (btnWa.getAttribute("data-label-open") || "Finalizar pedido por WhatsApp")
+        : (btnWa.getAttribute("data-label-closed") || "Reservar para las 19:00 hs");
+    }
+    const notice = document.getElementById("checkout-reserva-notice");
+    if (notice) notice.classList.toggle("hidden", open);
+    const proceed = document.getElementById("btn-proceed-checkout");
+    if (proceed) {
+      proceed.textContent = open
+        ? (proceed.getAttribute("data-label-open") || "Ir al checkout")
+        : (proceed.getAttribute("data-label-closed") || "Completar reserva");
+    }
+  }
+
+  function isFomoWindow() {
+    const m = new Date();
+    const mins = m.getHours() * 60 + m.getMinutes();
+    return mins >= 18 * 60 && mins < 19 * 60;
+  }
+
+  function updateFomoBanner() {
+    const bar = document.getElementById("fomo-banner");
+    const fomoMins = document.getElementById("fomo-mins");
+    const fomoPlural = document.getElementById("fomo-plural");
+    if (!bar || !fomoMins || !fomoPlural) return;
+    if (!isFomoWindow()) {
+      bar.classList.add("hidden");
+      lastFomoMinuteVal = -1;
+      return;
+    }
+    const now = new Date();
+    const openT = new Date(now);
+    openT.setHours(19, 0, 0, 0);
+    const diff = openT - now;
+    if (diff <= 0) {
+      bar.classList.add("hidden");
+      return;
+    }
+    const minutes = Math.max(1, Math.ceil(diff / 60000));
+    if (lastFomoMinuteVal !== minutes) {
+      fomoMins.classList.add("fomo-tick");
+      fomoPlural.classList.add("fomo-tick");
+      setTimeout(() => {
+        fomoMins.classList.remove("fomo-tick");
+        fomoPlural.classList.remove("fomo-tick");
+      }, 300);
+      lastFomoMinuteVal = minutes;
+    }
+    fomoMins.textContent = String(minutes);
+    fomoPlural.textContent = minutes === 1 ? " minuto" : " minutos";
+    bar.classList.remove("hidden");
+  }
+
+  function updateReservaBlock() {
+    const block = document.getElementById("cart-reserva-block");
+    if (!block) return;
+    const show = cart.length > 0 && !isKitchenOpen();
+    block.classList.toggle("hidden", !show);
+    const sel = document.getElementById("cart-reserva-hora");
+    if (sel) {
+      sel.setAttribute("aria-required", show ? "true" : "false");
+    }
+  }
+
+  function clearHoraReserva() {
+    const s = document.getElementById("cart-reserva-hora");
+    if (s) {
+      s.value = "";
+      s.selectedIndex = 0;
+    }
+    try {
+      localStorage.removeItem(LS_HORA);
+    } catch (e) {}
+  }
+
+  const PRODUCTS = [
+    {
+      id: "pz-muzza",
+      category: "pizza",
+      name: "Muzzarella",
+      desc: "Clásica de siempre: salsa, abundante muzza fundida y orégano.",
+      price: 7500,
+      image: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=800&q=80",
+    },
+    {
+      id: "pz-dmuzza",
+      category: "pizza",
+      name: "Doble Muzzarella",
+      desc: "Doble capa de queso cremoso, dorado al horno de piedra.",
+      price: 8900,
+      image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80",
+    },
+    {
+      id: "pz-fugazz",
+      category: "pizza",
+      name: "Fugazzeta",
+      desc: "Cebolla dulce salteada y muzzarella generosa, tradición argentina.",
+      price: 9200,
+      image: "https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=800&q=80",
+    },
+    {
+      id: "pz-cala",
+      category: "pizza",
+      name: "Calabresa",
+      desc: "Fetas de longaniza calabresa, morrones asados y queso a punto.",
+      price: 9600,
+      image: "https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?w=800&q=80",
+    },
+    {
+      id: "pz-espec",
+      category: "pizza",
+      name: "Especial",
+      desc: "Jamoncito, morrones, huevo a la plancheta y sabor a festejo.",
+      price: 10200,
+      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80",
+    },
+    {
+      id: "cl-trad",
+      category: "calzone",
+      name: "Calzone Tradicional (Napolitano)",
+      desc: "Ricotta, tomate y albahaca; masa cerrada, dorada y húmeda por dentro.",
+      price: 8500,
+      image: "https://images.unsplash.com/photo-1608897018459-23e9e2e7e0f6?w=800&q=80",
+    },
+    {
+      id: "cl-esp",
+      category: "calzone",
+      name: "Calzone Especial",
+      desc: "Relleno con jamón, queso, morrones: versión contundente Amicii.",
+      price: 9500,
+      image: "https://images.unsplash.com/photo-1604382355076-af4b0ed6013b?w=800&q=80",
+    },
+  ];
+
+  function getProductById(id) {
+    return PRODUCTS.find((p) => p.id === id);
+  }
+
+  function loadCart() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return [];
+      const data = JSON.parse(raw);
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCart(items) {
+    localStorage.setItem(LS_KEY, JSON.stringify(items));
+  }
+
+  let cart = loadCart();
+
+  function countPizzas() {
+    return cart.reduce((acc, line) => {
+      const p = getProductById(line.id);
+      if (p && p.category === "pizza") return acc + line.qty;
+      return acc;
+    }, 0);
+  }
+
+  function getCalzoneCount() {
+    return cart.reduce((acc, line) => {
+      const p = getProductById(line.id);
+      if (p && p.category === "calzone") return acc + line.qty;
+      return acc;
+    }, 0);
+  }
+
+  function computeTotals() {
+    let sub = 0;
+    let calzoneOriginal = 0;
+    for (const line of cart) {
+      const p = getProductById(line.id);
+      if (!p) continue;
+      const lineSub = p.price * line.qty;
+      sub += lineSub;
+      if (p.category === "calzone") {
+        calzoneOriginal += p.price * line.qty;
+      }
+    }
+    const promoActive = countPizzas() >= 2 && getCalzoneCount() > 0;
+    let calzoneDiscount = 0;
+    if (promoActive) {
+      for (const line of cart) {
+        const p = getProductById(line.id);
+        if (p && p.category === "calzone") {
+          calzoneDiscount += p.price * line.qty * 0.2;
+        }
+      }
+    }
+    const total = Math.max(0, sub - calzoneDiscount);
+    return { sub, calzoneDiscount, total, promoActive };
+  }
+
+  function formatMoney(n) {
+    return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n);
+  }
+
+  function updateBadges() {
+    const n = cart.reduce((a, l) => a + l.qty, 0);
+    const els = [document.getElementById("cart-badge"), document.getElementById("float-cart-badge")];
+    els.forEach((el) => {
+      if (el) {
+        el.textContent = String(n);
+        el.classList.toggle("hidden", n === 0);
+        if (n > 0) el.classList.remove("scale-0");
+      }
+    });
+  }
+
+  function renderProductCard(p) {
+    const isPizza = p.category === "pizza";
+    const cardClass = isPizza
+      ? "pizza-card group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/15 bg-amicii-black/50 shadow-lg transition hover:border-amicii-gold/35 hover:shadow-amicii-gold/5"
+      : "group flex flex-col overflow-hidden rounded-2xl border border-amicii-gold/15 bg-amicii-black/50 shadow-lg transition hover:border-amicii-gold/35 hover:shadow-amicii-gold/5";
+    const imgClass = isPizza
+      ? "pizza-card-image h-full w-full object-cover"
+      : "h-full w-full object-cover";
+    return `
+      <article class="${cardClass}">
+        <div class="relative aspect-[4/3] overflow-hidden">
+          <img src="${p.image}" alt="${p.name}" class="${imgClass}" loading="lazy" width="800" height="600" />
+          <div class="absolute inset-0 bg-gradient-to-t from-amicii-black/80 to-transparent" aria-hidden="true"></div>
+        </div>
+        <div class="flex flex-1 flex-col p-5">
+          <h4 class="font-display text-lg font-bold text-amicii-cream">${p.name}</h4>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-amicii-cream/60">${p.desc}</p>
+          <div class="mt-4 flex items-end justify-between gap-3">
+            <span class="text-lg font-bold text-amicii-gold">${formatMoney(p.price)}</span>
+            <button
+              type="button"
+              class="add-to-cart inline-flex items-center justify-center rounded-full border border-amicii-gold/50 bg-amicii-gold/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-amicii-cream transition hover:bg-amicii-gold/25"
+              data-id="${p.id}"
+            >Agregar al carrito</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderGrids() {
+    const pz = PRODUCTS.filter((p) => p.category === "pizza");
+    const cz = PRODUCTS.filter((p) => p.category === "calzone");
+    document.getElementById("grid-pizzas").innerHTML = pz.map(renderProductCard).join("");
+    document.getElementById("grid-calzones").innerHTML = cz.map(renderProductCard).join("");
+  }
+
+  function addToCart(id) {
+    const line = cart.find((l) => l.id === id);
+    if (line) line.qty += 1;
+    else cart.push({ id, qty: 1 });
+    saveCart(cart);
+    updateBadges();
+    renderCart();
+  }
+
+  function setQty(id, delta) {
+    const line = cart.find((l) => l.id === id);
+    if (!line) return;
+    const newQty = line.qty + delta;
+    if (newQty < 0) return;
+    if (newQty === 0) {
+      const row = document.querySelector(`[data-cart-line-id="${id}"]`);
+      const doRemove = () => {
+        cart = cart.filter((l) => l.id !== id);
+        saveCart(cart);
+        updateBadges();
+        renderCart();
+      };
+      if (row) {
+        row.classList.add("cart-line--leaving");
+        setTimeout(doRemove, 280);
+      } else {
+        doRemove();
+      }
+      return;
+    }
+    line.qty = newQty;
+    saveCart(cart);
+    updateBadges();
+    renderCart();
+  }
+
+  function removeLine(id) {
+    cart = cart.filter((l) => l.id !== id);
+    saveCart(cart);
+    updateBadges();
+    renderCart();
+  }
+
+  function emptyCart() {
+    if (!cart.length) return;
+    if (confirm("¿Vaciar todo el carrito?")) {
+      cart = [];
+      saveCart(cart);
+      clearHoraReserva();
+      updateBadges();
+      renderCart();
+    }
+  }
+
+  function renderCart() {
+    const listEl = document.getElementById("cart-list");
+    const emptyEl = document.getElementById("cart-empty");
+    const footEl = document.getElementById("cart-footer");
+    const t = computeTotals();
+    if (!cart.length) {
+      emptyEl.classList.remove("hidden");
+      listEl.classList.add("hidden");
+      footEl.classList.add("hidden");
+      clearHoraReserva();
+      updateReservaBlock();
+      return;
+    }
+    emptyEl.classList.add("hidden");
+    listEl.classList.remove("hidden");
+    footEl.classList.remove("hidden");
+    const promo = document.getElementById("promo-line");
+    if (t.promoActive) {
+      promo.classList.remove("hidden");
+      promo.textContent = "Promo activa: 2+ pizzas en el carrito — 20% de descuento en calzones.";
+    } else {
+      promo.classList.add("hidden");
+    }
+    document.getElementById("cart-subtotal").textContent = formatMoney(t.sub);
+    const disc = document.getElementById("discount-line");
+    if (t.calzoneDiscount > 0) {
+      disc.classList.remove("hidden");
+      document.getElementById("cart-discount").textContent = "−" + formatMoney(t.calzoneDiscount);
+    } else {
+      disc.classList.add("hidden");
+    }
+    document.getElementById("cart-total").textContent = formatMoney(t.total);
+    listEl.innerHTML = cart
+      .map((line) => {
+        const p = getProductById(line.id);
+        if (!p) return "";
+        let unitNote = "";
+        if (p.category === "calzone" && t.promoActive) {
+          unitNote = ' <span class="text-xs text-green-300/80">(−20% promo)</span>';
+        }
+        return `
+          <div class="cart-line mb-3 flex gap-3 rounded-xl border border-amicii-gold/15 bg-amicii-black/30 p-3" data-cart-line-id="${p.id}" data-line="${p.id}">
+            <img src="${p.image}" alt="" class="h-16 w-20 flex-shrink-0 rounded-lg object-cover" width="80" height="64" />
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-semibold text-amicii-cream line-clamp-2">${p.name}</p>
+              <p class="text-xs text-amicii-cream/50">${formatMoney(p.price)} c/u${unitNote}</p>
+              <div class="mt-2 flex items-center gap-2">
+                <button type="button" class="cart-minus h-8 w-8 flex-shrink-0 rounded-lg border border-amicii-gold/30 text-amicii-cream transition hover:bg-amicii-gold/10" data-id="${p.id}" aria-label="Quitar una unidad">−</button>
+                <span class="min-w-[1.5rem] text-center text-sm font-bold tabular-nums">${line.qty}</span>
+                <button type="button" class="cart-plus h-8 w-8 flex-shrink-0 rounded-lg border border-amicii-gold/30 text-amicii-cream transition hover:bg-amicii-gold/10" data-id="${p.id}" aria-label="Agregar una unidad">+</button>
+                <button type="button" class="cart-remove ml-auto text-xs text-red-300/80 underline transition hover:text-red-200" data-id="${p.id}">Quitar todo</button>
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+    updateReservaBlock();
+  }
+
+  function openCart() {
+    const panel = document.getElementById("cart-panel");
+    const overlay = document.getElementById("cart-overlay");
+    panel.classList.remove("translate-x-full");
+    overlay.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+    updateScheduleUI();
+    updateReservaBlock();
+    updateFomoBanner();
+  }
+
+  function closeCart() {
+    const panel = document.getElementById("cart-panel");
+    const overlay = document.getElementById("cart-overlay");
+    panel.classList.add("translate-x-full");
+    overlay.classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+
+  function openCheckout() {
+    if (!cart.length) {
+      alert("Agregá productos al carrito.");
+      return;
+    }
+    if (!isKitchenOpen()) {
+      const selH = document.getElementById("cart-reserva-hora");
+      if (!selH || !selH.value) {
+        alert("Antes de continuar, elegí a qué hora querés recibir o retirar tu reserva (selector en el carrito).");
+        return;
+      }
+    }
+    closeCart();
+    document.getElementById("checkout-form").reset();
+    document.getElementById("field-direccion").classList.add("hidden");
+    document.getElementById("checkout-modal").classList.remove("hidden");
+    document.getElementById("checkout-modal").classList.add("flex");
+    updateScheduleUI();
+  }
+
+  function closeCheckout() {
+    document.getElementById("checkout-modal").classList.add("hidden");
+    document.getElementById("checkout-modal").classList.remove("flex");
+  }
+
+  function getCheckoutData() {
+    const form = document.getElementById("checkout-form");
+    const entrega = form.querySelector('input[name="entrega"]:checked')?.value || "";
+    const pago = form.querySelector('input[name="pago"]:checked')?.value || "";
+    const cupon = (form.cupon && form.cupon.value) ? form.cupon.value.trim() : "";
+    const direccion = form.direccion && form.direccion.value ? form.direccion.value.trim() : "";
+    if (!entrega) {
+      alert("Elegí un método de entrega.");
+      return null;
+    }
+    if (entrega === "domicilio" && !direccion) {
+      alert("Para envío a domicilio, ingresá la dirección completa.");
+      return null;
+    }
+    if (!pago) {
+      alert("Elegí un método de pago.");
+      return null;
+    }
+    const selH = document.getElementById("cart-reserva-hora");
+    let horaReserva = "";
+    if (!isKitchenOpen()) {
+      if (!selH || !selH.value) {
+        alert("Elegí la hora aproximada de retiro o entrega en el carrito (obligatorio para reservas).");
+        return null;
+      }
+      horaReserva = selH.value;
+    } else if (forceReservaWhatsapp && selH && selH.value) {
+      horaReserva = selH.value;
+    }
+    return {
+      entrega,
+      pago,
+      cupon,
+      direccion: entrega === "domicilio" ? direccion : "",
+      horaReserva,
+    };
+  }
+
+  function buildWhatsappText(checkout) {
+    const t = computeTotals();
+    const lines = [];
+    if (forceReservaWhatsapp || !isKitchenOpen()) {
+      lines.push("*" + RESERVA_WHATSAPP_TAG + "*");
+      lines.push("");
+    }
+    lines.push("*PEDIDO AMICII*");
+    lines.push("");
+    lines.push("*Productos:*");
+    for (const line of cart) {
+      const p = getProductById(line.id);
+      if (!p) continue;
+      lines.push(`• ${p.name} x${line.qty} — ${formatMoney(p.price * line.qty)}`);
+    }
+    lines.push("");
+    if (checkout.horaReserva) {
+      lines.push("⏰ HORA SOLICITADA: " + checkout.horaReserva);
+      lines.push("");
+    }
+    lines.push(`*Subtotal:* ${formatMoney(t.sub)}`);
+    if (t.calzoneDiscount > 0) {
+      lines.push(`*Desc. calzones (2+ pizzas):* −${formatMoney(t.calzoneDiscount)}`);
+    }
+    lines.push(`*Total:* ${formatMoney(t.total)}`);
+    lines.push("");
+    lines.push("*Entrega:* " + (checkout.entrega === "domicilio" ? "Envío a domicilio" : "Retiro en local"));
+    if (checkout.entrega === "domicilio") {
+      lines.push(`*Dirección:* ${checkout.direccion}`);
+    }
+    lines.push("*Pago:* " + (checkout.pago === "mercadopago" ? "Mercado Pago" : "Pago en el local"));
+    lines.push("*Cupón:* " + (checkout.cupon || "(ninguno)"));
+    return lines.join("\n");
+  }
+
+  function openReservationConfirm() {
+    const m = document.getElementById("reservation-confirm-modal");
+    m.classList.remove("hidden");
+    m.classList.add("flex");
+  }
+
+  function closeReservationConfirm() {
+    const m = document.getElementById("reservation-confirm-modal");
+    m.classList.add("hidden");
+    m.classList.remove("flex");
+    forceReservaWhatsapp = false;
+  }
+
+  function doSendWhatsapp() {
+    const c = getCheckoutData();
+    if (!c) return;
+    const text = encodeURIComponent(buildWhatsappText(c));
+    const url = `https://wa.me/${WHATSAPP_E164}?text=${text}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+    closeReservationConfirm();
+    closeCheckout();
+    const f = document.getElementById("checkout-form");
+    f.reset();
+    document.getElementById("field-direccion").classList.add("hidden");
+    document.getElementById("direccion").removeAttribute("required");
+    clearHoraReserva();
+  }
+
+  function sendWhatsapp() {
+    const c = getCheckoutData();
+    if (!c) return;
+    if (!isKitchenOpen()) {
+      forceReservaWhatsapp = true;
+      openReservationConfirm();
+      return;
+    }
+    doSendWhatsapp();
+  }
+
+  document.getElementById("grid-pizzas").addEventListener("click", (e) => {
+    const btn = e.target.closest(".add-to-cart");
+    if (btn && btn.dataset.id) {
+      addToCart(btn.dataset.id);
+      openCart();
+    }
+  });
+  document.getElementById("grid-calzones").addEventListener("click", (e) => {
+    const btn = e.target.closest(".add-to-cart");
+    if (btn && btn.dataset.id) {
+      addToCart(btn.dataset.id);
+      openCart();
+    }
+  });
+
+  document.getElementById("cart-list").addEventListener("click", (e) => {
+    const minus = e.target.closest(".cart-minus");
+    const plus = e.target.closest(".cart-plus");
+    const del = e.target.closest(".cart-remove");
+    if (minus) setQty(minus.dataset.id, -1);
+    if (plus) setQty(plus.dataset.id, 1);
+    if (del) removeLine(del.dataset.id);
+  });
+
+  [document.getElementById("btn-open-cart"), document.getElementById("btn-floating-cart")].forEach((b) => {
+    if (b) b.addEventListener("click", openCart);
+  });
+  document.getElementById("btn-close-cart").addEventListener("click", closeCart);
+  document.getElementById("cart-overlay").addEventListener("click", closeCart);
+  document.getElementById("btn-empty-cart").addEventListener("click", emptyCart);
+  document.getElementById("btn-proceed-checkout").addEventListener("click", openCheckout);
+
+  document.querySelectorAll('input[name="entrega"]').forEach((radio) => {
+    radio.addEventListener("change", (e) => {
+      const wrap = document.getElementById("field-direccion");
+      const field = document.getElementById("direccion");
+      if (e.target.value === "domicilio") {
+        wrap.classList.remove("hidden");
+        field.setAttribute("required", "required");
+      } else {
+        wrap.classList.add("hidden");
+        field.removeAttribute("required");
+        field.value = "";
+      }
+    });
+  });
+
+  document.getElementById("btn-checkout-cancel").addEventListener("click", () => {
+    closeCheckout();
+    openCart();
+  });
+  document.getElementById("checkout-backdrop").addEventListener("click", () => {
+    closeCheckout();
+    openCart();
+  });
+  document.getElementById("btn-whatsapp").addEventListener("click", (e) => {
+    e.preventDefault();
+    sendWhatsapp();
+  });
+  document.getElementById("btn-reservation-confirm-whatsapp").addEventListener("click", (e) => {
+    e.preventDefault();
+    doSendWhatsapp();
+  });
+  document.getElementById("btn-reservation-cancel").addEventListener("click", (e) => {
+    e.preventDefault();
+    closeReservationConfirm();
+  });
+  document.getElementById("reservation-confirm-backdrop").addEventListener("click", closeReservationConfirm);
+
+  const chatOpen = { value: false };
+  const WELCOME_OPEN =
+    "¡Benvenuti a Amicii! Soy su guía pizzero. ¿Buscás una Pizza clásica o te gustaría probar nuestros Calzones artesanales?";
+  const WELCOME_CLOSED =
+    "¡Benvenuti! Actualmente nuestra cocina está cerrada. Abrimos de 19:00 a 23:00 hs. ¿Te gustaría realizar una reserva ahora para que tu pedido sea entregado apenas abramos a las 19:00?";
+  const TIP = "Tip Amicii: si llevás 2 Pizzas, el Calzone tiene 20% de descuento.";
+
+  function appendChatMessage(text, fromBot) {
+    const el = document.getElementById("chat-messages");
+    const row = document.createElement("div");
+    row.className = fromBot
+      ? "rounded-xl rounded-bl-sm bg-amicii-gold/10 border border-amicii-gold/20 px-3 py-2 text-left"
+      : "ml-8 rounded-xl rounded-br-sm bg-amicii-black/50 px-3 py-2 text-left";
+    row.textContent = text;
+    el.appendChild(row);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function appendClosedChatActions() {
+    const el = document.getElementById("chat-messages");
+    if (el.querySelector("[data-closed-actions]")) return;
+    const row = document.createElement("div");
+    row.setAttribute("data-closed-actions", "1");
+    row.className = "mt-2 flex flex-wrap gap-2";
+    const mkBtn = (label, isPrimary) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = (isPrimary
+        ? "rounded-lg border border-amicii-gold bg-amicii-gold/20 px-3 py-1.5 text-xs font-bold text-amicii-cream "
+        : "rounded-lg border border-amicii-gold/30 bg-amicii-black/40 px-3 py-1.5 text-xs font-medium text-amicii-cream/90 ") + "hover:brightness-110";
+      b.textContent = label;
+      return b;
+    };
+    const b1 = mkBtn("Sí, quiero reservar", true);
+    b1.addEventListener("click", () => {
+      appendChatMessage("Sí, quiero reservar", false);
+      appendChatMessage(
+        "¡Perfecto! Elegí tus platos; al finalizar, tocá “Reservar para las 19:00” en el checkout. Tu pedido queda listo para el arranque del servicio. Ottimo.",
+        true
+      );
+    });
+    const b2 = mkBtn("Solo miro el menú", false);
+    b2.addEventListener("click", () => {
+      appendChatMessage("Solo miro el menú, gracias", false);
+      appendChatMessage("Cuando quieras, estamos de 19:00 a 23:00. ¡A disfrutar! Buon appetit.", true);
+    });
+    row.appendChild(b1);
+    row.appendChild(b2);
+    el.appendChild(row);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function runInitialChatMessages() {
+    if (window.__amiciiChatInit) return;
+    window.__amiciiChatInit = true;
+    if (isKitchenOpen()) {
+      appendChatMessage(WELCOME_OPEN, true);
+      setTimeout(() => appendChatMessage(TIP, true), 500);
+    } else {
+      appendChatMessage(WELCOME_CLOSED, true);
+      setTimeout(() => appendChatMessage(TIP, true), 500);
+      setTimeout(() => appendClosedChatActions(), 900);
+    }
+  }
+
+  function showChat() {
+    document.getElementById("chat-panel").classList.remove("hidden");
+    chatOpen.value = true;
+    runInitialChatMessages();
+  }
+
+  document.getElementById("btn-chat-bubble").addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (document.getElementById("chat-panel").classList.contains("hidden")) showChat();
+    else {
+      document.getElementById("chat-panel").classList.add("hidden");
+      chatOpen.value = false;
+    }
+  });
+  document.getElementById("btn-close-chat").addEventListener("click", () => {
+    document.getElementById("chat-panel").classList.add("hidden");
+  });
+
+  const horaInit = document.getElementById("cart-reserva-hora");
+  if (horaInit) {
+    try {
+      const sv = localStorage.getItem(LS_HORA);
+      if (sv && Array.from(horaInit.options).some((o) => o.value === sv)) {
+        horaInit.value = sv;
+      }
+    } catch (e) {}
+    horaInit.addEventListener("change", function () {
+      if (this.value) {
+        try {
+          localStorage.setItem(LS_HORA, this.value);
+        } catch (e) {}
+      }
+    });
+  }
+
+  window.addEventListener("load", () => {
+    setInterval(function () {
+      updateFomoBanner();
+      updateReservaBlock();
+    }, 1000);
+    setInterval(updateScheduleUI, 60000);
+    setTimeout(() => {
+      if (!window.__amiciiChatInit) {
+        showChat();
+      }
+    }, 400);
+  });
+
+  updateScheduleUI();
+  updateFomoBanner();
+  updateReservaBlock();
+  renderGrids();
+  updateBadges();
+  renderCart();
+})();
+  </script>
+</body>
+</html>
