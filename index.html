@@ -198,6 +198,14 @@
     .logo-mobile {
       transition: max-height 0.28s ease, height 0.28s ease;
     }
+    .total-flash {
+      transition: color 0.24s ease, text-shadow 0.24s ease, transform 0.24s ease;
+    }
+    .total-flash-active {
+      transform: scale(1.03);
+      color: #ffe27a !important;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+    }
     @media (max-width: 767px) {
       #site-header.header-scrolled img.logo-mobile {
         max-height: 2.75rem;
@@ -698,7 +706,7 @@
           </div>
           <div class="flex items-center justify-between border-t border-amicii-gold/15 pt-2 text-sm font-bold uppercase tracking-wide text-amicii-goldbright">
             <span>TOTAL</span>
-            <span id="checkout-total">$0</span>
+            <span id="checkout-total" class="total-flash">$0</span>
           </div>
           <p id="checkout-shipping-upsell" class="hidden rounded-lg border border-amicii-gold/20 bg-amicii-black/45 px-2.5 py-2 text-[0.7rem] font-semibold text-amicii-goldsoft"></p>
         </div>
@@ -754,7 +762,7 @@
         <div class="space-y-1 rounded-lg border border-amicii-gold/20 bg-amicii-black/45 px-3 py-2 text-xs font-semibold">
           <p class="flex items-center justify-between"><span>Subtotal</span><span id="confirm-subtotal">$0</span></p>
           <p class="flex items-center justify-between"><span>Costo de Envío</span><span id="confirm-shipping">$0</span></p>
-          <p class="flex items-center justify-between border-t border-amicii-gold/15 pt-1 text-amicii-goldbright"><span>TOTAL</span><span id="confirm-total">$0</span></p>
+          <p class="flex items-center justify-between border-t border-amicii-gold/15 pt-1 text-amicii-goldbright"><span>TOTAL</span><span id="confirm-total" class="total-flash">$0</span></p>
         </div>
         <p id="confirm-shipping-upsell" class="hidden rounded-lg border border-amicii-gold/20 bg-amicii-black/45 px-3 py-2 text-[0.68rem] font-semibold text-amicii-goldsoft"></p>
       </div>
@@ -1124,6 +1132,9 @@
       checkoutSubtotal.textContent = formatMoney(t.sub);
       applyShippingValueStyles(checkoutShipping, t);
       checkoutTotal.textContent = formatMoney(t.finalTotal);
+      checkoutTotal.classList.remove("total-flash-active");
+      requestAnimationFrame(() => checkoutTotal.classList.add("total-flash-active"));
+      setTimeout(() => checkoutTotal.classList.remove("total-flash-active"), 250);
       renderPersistentShippingUpsell(document.getElementById("checkout-shipping-upsell"), t);
     }
     const confirmSubtotal = document.getElementById("confirm-subtotal");
@@ -1133,6 +1144,9 @@
       confirmSubtotal.textContent = formatMoney(t.sub);
       applyShippingValueStyles(confirmShipping, t);
       confirmTotal.textContent = formatMoney(t.finalTotal);
+      confirmTotal.classList.remove("total-flash-active");
+      requestAnimationFrame(() => confirmTotal.classList.add("total-flash-active"));
+      setTimeout(() => confirmTotal.classList.remove("total-flash-active"), 250);
       renderPersistentShippingUpsell(document.getElementById("confirm-shipping-upsell"), t);
     }
   }
