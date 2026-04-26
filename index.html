@@ -593,10 +593,10 @@
         type="button"
         id="btn-proceed-checkout"
         class="btn-amicii-primary w-full rounded-full py-3.5 text-sm font-bold uppercase tracking-wide"
-        data-label-open="Continuar con el pedido"
-        data-label-closed="Continuar con el pedido"
+        data-label-open="IR A LA RESERVA"
+        data-label-closed="Completar reserva"
       >
-        Continuar con el pedido
+        IR A LA RESERVA
       </button>
       <button
         type="button"
@@ -639,7 +639,7 @@
           <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Entrega <span class="text-amicii-tomato">*</span></p>
           <div class="space-y-2">
             <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
-              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 accent-amicii-tomato" required />
+              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 accent-amicii-tomato" checked required />
               <span class="text-sm font-medium text-amicii-cream">Envío a domicilio</span>
             </label>
             <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
@@ -695,18 +695,23 @@
               aria-required="true"
             />
         </div>
-        <div class="space-y-2 rounded-xl border border-amicii-gold/25 bg-amicii-card/65 p-3">
+        <div class="space-y-2 rounded-2xl border border-amicii-gold/25 bg-gradient-to-b from-amicii-card/80 to-amicii-black/60 p-4 shadow-inner shadow-black/30">
+          <p class="text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-amicii-gold/80">Resumen de costos</p>
           <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-amicii-cream/85">
-            <span>Subtotal</span>
-            <span id="checkout-subtotal">$0</span>
+            <span>Subtotal Productos</span>
+            <span id="checkout-summary-subtotal">$0</span>
+          </div>
+          <div id="checkout-summary-discount-row" class="hidden items-center justify-between text-xs font-semibold uppercase tracking-wide text-green-300">
+            <span>Descuento Promo Pizzas</span>
+            <span id="checkout-summary-discount">-$0</span>
           </div>
           <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-amicii-cream/85">
             <span>Costo de Envío</span>
-            <span id="checkout-shipping">$0</span>
+            <span id="checkout-summary-shipping">$0</span>
           </div>
-          <div class="flex items-center justify-between border-t border-amicii-gold/15 pt-2 text-sm font-bold uppercase tracking-wide text-amicii-goldbright">
-            <span>TOTAL</span>
-            <span id="checkout-total" class="total-flash">$0</span>
+          <div class="flex items-center justify-between border-t border-amicii-gold/20 pt-2 text-base font-bold uppercase tracking-wide text-amicii-goldbright">
+            <span>Monto Total a Pagar</span>
+            <span id="checkout-summary-total" class="total-flash">$0</span>
           </div>
           <p id="checkout-shipping-upsell" class="hidden rounded-lg border border-amicii-gold/20 bg-amicii-black/45 px-2.5 py-2 text-[0.7rem] font-semibold text-amicii-goldsoft"></p>
         </div>
@@ -802,6 +807,8 @@
   const OPEN_MINUTE = 0;
   const CLOSE_HOUR = 23;
   const SHIPPING_CONFIG = { cost: 6000, threshold: 30000 };
+  const COSTO_ENVIO = SHIPPING_CONFIG.cost;
+  const UMBRAL_ENVIO_GRATIS = SHIPPING_CONFIG.threshold;
   const RESERVA_WHATSAPP_TAG = "[RESERVA FUERA DE HORARIO - ENTREGA PROGRAMADA 19:00 HS]";
   const SFX = {
     add: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
@@ -886,11 +893,9 @@
     if (notice) notice.classList.toggle("hidden", open);
     const proceed = document.getElementById("btn-proceed-checkout");
     if (proceed) {
-      const t = calculateCartTotals();
-      const proceedLabel = open
-        ? (proceed.getAttribute("data-label-open") || "Continuar con el pedido")
-        : (proceed.getAttribute("data-label-closed") || "Continuar con el pedido");
-      proceed.textContent = `${proceedLabel} · ${formatMoney(t.finalTotal)}`;
+      proceed.textContent = open
+        ? (proceed.getAttribute("data-label-open") || "IR A LA RESERVA")
+        : (proceed.getAttribute("data-label-closed") || "Completar reserva");
     }
     const primaryCta = document.getElementById("btn-primary-cta");
     if (primaryCta) {
@@ -1082,17 +1087,17 @@
   }
 
   function getSelectedDeliveryMethod() {
-    return document.querySelector('#checkout-form input[name="entrega"]:checked')?.value || "";
+    return document.querySelector('#checkout-form input[name="entrega"]:checked')?.value || "domicilio";
   }
 
   function calculateCartTotals(deliveryMethod = getSelectedDeliveryMethod()) {
     const baseTotals = computeTotals();
     let shippingFee = 0;
-    if (deliveryMethod === "domicilio" && baseTotals.sub < SHIPPING_CONFIG.threshold) {
-      shippingFee = SHIPPING_CONFIG.cost;
+    if (deliveryMethod === "domicilio" && baseTotals.sub < UMBRAL_ENVIO_GRATIS) {
+      shippingFee = COSTO_ENVIO;
     }
     const amountToFreeShipping = deliveryMethod === "domicilio"
-      ? Math.max(0, SHIPPING_CONFIG.threshold - baseTotals.sub)
+      ? Math.max(0, UMBRAL_ENVIO_GRATIS - baseTotals.sub)
       : 0;
     return {
       ...baseTotals,
@@ -1119,19 +1124,30 @@
     if (!el) return;
     el.classList.remove("text-amicii-gold", "font-bold");
     if (t.isShippingFree && t.deliveryMethod === "domicilio") {
-      el.textContent = "¡GRATIS!";
+      el.textContent = "¡Bonificado!";
       el.classList.add("text-amicii-gold", "font-bold");
       return;
     }
-    el.textContent = t.deliveryMethod === "domicilio" ? formatMoney(t.shippingFee) : formatMoney(0);
+    el.textContent = t.deliveryMethod === "domicilio" ? formatMoney(t.shippingFee) : "Sin cargo";
   }
 
   function renderCheckoutAndConfirmSummaries(t) {
-    const checkoutSubtotal = document.getElementById("checkout-subtotal");
-    const checkoutShipping = document.getElementById("checkout-shipping");
-    const checkoutTotal = document.getElementById("checkout-total");
-    if (checkoutSubtotal && checkoutShipping && checkoutTotal) {
+    const checkoutSubtotal = document.getElementById("checkout-summary-subtotal");
+    const checkoutDiscountRow = document.getElementById("checkout-summary-discount-row");
+    const checkoutDiscount = document.getElementById("checkout-summary-discount");
+    const checkoutShipping = document.getElementById("checkout-summary-shipping");
+    const checkoutTotal = document.getElementById("checkout-summary-total");
+    if (checkoutSubtotal && checkoutDiscountRow && checkoutDiscount && checkoutShipping && checkoutTotal) {
       checkoutSubtotal.textContent = formatMoney(t.sub);
+      if (t.calzoneDiscount > 0) {
+        checkoutDiscountRow.classList.remove("hidden");
+        checkoutDiscountRow.classList.add("flex");
+        checkoutDiscount.textContent = "−" + formatMoney(t.calzoneDiscount);
+      } else {
+        checkoutDiscountRow.classList.add("hidden");
+        checkoutDiscountRow.classList.remove("flex");
+        checkoutDiscount.textContent = "−" + formatMoney(0);
+      }
       applyShippingValueStyles(checkoutShipping, t);
       checkoutTotal.textContent = formatMoney(t.finalTotal);
       checkoutTotal.classList.remove("total-flash-active");
@@ -1332,10 +1348,6 @@
     applyShippingValueStyles(shippingValue, t);
     renderPersistentShippingUpsell(shippingUpsell, t);
     document.getElementById("cart-total").textContent = formatMoney(t.finalTotal);
-    const proceedBtn = document.getElementById("btn-proceed-checkout");
-    if (proceedBtn) {
-      proceedBtn.textContent = `${proceedBtn.getAttribute("data-label-open") || "Continuar con el pedido"} · ${formatMoney(t.finalTotal)}`;
-    }
     renderCheckoutAndConfirmSummaries(t);
     listEl.innerHTML = cart
       .map((line) => {
@@ -1398,10 +1410,12 @@
     }
     closeCart();
     document.getElementById("checkout-form").reset();
+    const domicilioRadio = document.querySelector('#checkout-form input[name="entrega"][value="domicilio"]');
+    if (domicilioRadio) domicilioRadio.checked = true;
     const wrapDireccion = document.getElementById("field-direccion");
     const direccionField = document.getElementById("direccion");
-    wrapDireccion.classList.add("hidden");
-    direccionField.removeAttribute("required");
+    wrapDireccion.classList.remove("hidden");
+    direccionField.setAttribute("required", "required");
     const modal = document.getElementById("checkout-modal");
     const content = document.getElementById("checkout-modal-content");
     modal.classList.remove("hidden");
@@ -1413,6 +1427,8 @@
       modal.style.opacity = "1";
       if (content) content.style.transform = "scale(1)";
     });
+    const totals = calculateCartTotals(getSelectedDeliveryMethod());
+    renderCheckoutAndConfirmSummaries(totals);
     renderCart();
     updateScheduleUI();
   }
@@ -1443,7 +1459,7 @@
       return null;
     }
     if (!entrega) {
-      alert("Por favor, seleccioná si preferís envío o retiro.");
+      alert("Elegí un método de entrega.");
       return null;
     }
     if (entrega === "domicilio" && !direccion) {
@@ -1477,7 +1493,7 @@
 
   function buildWhatsappText(checkout) {
     const t = calculateCartTotals(checkout.entrega);
-    const shippingText = t.deliveryMethod === "retiro" ? formatMoney(0) : (t.isShippingFree ? "GRATIS" : formatMoney(t.shippingFee));
+    const shippingText = t.deliveryMethod === "retiro" ? "Sin cargo" : (t.isShippingFree ? "GRATIS" : formatMoney(t.shippingFee));
     const lines = [];
     lines.push(`Hola, soy ${checkout.clientName}. Quiero realizar el siguiente pedido.`);
     lines.push("");
