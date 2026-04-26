@@ -198,6 +198,14 @@
     .logo-mobile {
       transition: max-height 0.28s ease, height 0.28s ease;
     }
+    .cart-total-animated {
+      transition: transform 0.26s ease, text-shadow 0.26s ease, color 0.26s ease;
+    }
+    .cart-total-animated.cart-total-flash {
+      transform: scale(1.04);
+      color: #ffe27a !important;
+      text-shadow: 0 0 14px rgba(255, 215, 0, 0.65);
+    }
     @media (max-width: 767px) {
       #site-header.header-scrolled img.logo-mobile {
         max-height: 2.75rem;
@@ -572,9 +580,14 @@
         <span>Descuento (calzones, promo 2 pizzas)</span>
         <span id="cart-discount">$0</span>
       </div>
+      <div id="delivery-line" class="hidden items-center justify-between text-xs font-medium text-amicii-gold/75">
+        <span>Envío a domicilio <span class="text-[0.65rem] font-normal text-amicii-cream/55">(fijo)</span></span>
+        <span id="cart-delivery">$0</span>
+      </div>
+      <p id="delivery-progress" class="hidden rounded-lg border border-amicii-gold/20 bg-amicii-card/70 px-3 py-2 text-[0.7rem] font-semibold leading-snug text-amicii-goldsoft"></p>
       <div class="flex items-center justify-between border-t border-amicii-gold/15 pt-3">
         <span class="font-semibold text-amicii-cream">Total</span>
-        <span id="cart-total" class="text-lg font-bold text-amicii-goldbright">$0</span>
+        <span id="cart-total" class="cart-total-animated text-lg font-bold text-amicii-goldbright">$0</span>
       </div>
       <button
         type="button"
@@ -624,14 +637,24 @@
       <form id="checkout-form" class="mt-6 space-y-6">
         <div>
           <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Entrega <span class="text-amicii-tomato">*</span></p>
-          <div class="space-y-2">
-            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
-              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 accent-amicii-tomato" required />
-              <span class="text-sm font-medium text-amicii-cream">Envío a domicilio</span>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <label class="group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-amicii-gold/25 bg-amicii-card/75 px-4 py-3.5 transition hover:border-amicii-goldbright/50">
+              <input type="radio" name="entrega" value="domicilio" class="peer sr-only" required />
+              <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-amicii-gold/30 bg-amicii-black/65 text-base transition group-hover:border-amicii-goldbright/45 peer-checked:border-amicii-goldbright peer-checked:bg-amicii-gold/20">🚚</span>
+              <span class="flex flex-col">
+                <span class="text-sm font-semibold text-amicii-cream">Delivery</span>
+                <span class="text-[0.68rem] font-medium uppercase tracking-wide text-amicii-cream/65">Hasta tu puerta</span>
+              </span>
+              <span class="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-transparent transition peer-checked:ring-amicii-goldbright/60"></span>
             </label>
-            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
-              <input type="radio" name="entrega" value="retiro" class="h-4 w-4 accent-amicii-tomato" required />
-              <span class="text-sm font-medium text-amicii-cream">Retiro en local</span>
+            <label class="group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-amicii-gold/25 bg-amicii-card/75 px-4 py-3.5 transition hover:border-amicii-goldbright/50">
+              <input type="radio" name="entrega" value="retiro" class="peer sr-only" required />
+              <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-amicii-gold/30 bg-amicii-black/65 text-base transition group-hover:border-amicii-goldbright/45 peer-checked:border-amicii-goldbright peer-checked:bg-amicii-gold/20">🏠</span>
+              <span class="flex flex-col">
+                <span class="text-sm font-semibold text-amicii-cream">Retiro</span>
+                <span class="text-[0.68rem] font-medium uppercase tracking-wide text-amicii-cream/65">En el local</span>
+              </span>
+              <span class="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-transparent transition peer-checked:ring-amicii-goldbright/60"></span>
             </label>
           </div>
           <div id="field-direccion" class="mt-3 hidden">
@@ -767,6 +790,8 @@
   const OPEN_HOUR = 19;
   const OPEN_MINUTE = 0;
   const CLOSE_HOUR = 23;
+  const COSTO_ENVIO = 6000;
+  const UMBRAL_ENVIO_GRATIS = 30000;
   const RESERVA_WHATSAPP_TAG = "[RESERVA FUERA DE HORARIO - ENTREGA PROGRAMADA 19:00 HS]";
   const SFX = {
     add: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
@@ -1044,6 +1069,26 @@
     return { sub, calzoneDiscount, total, promoActive };
   }
 
+  function getSelectedDeliveryMethod() {
+    return document.querySelector('#checkout-form input[name="entrega"]:checked')?.value || "";
+  }
+
+  function calculateTotal(deliveryMethod = getSelectedDeliveryMethod()) {
+    const totals = computeTotals();
+    const isDelivery = deliveryMethod === "domicilio";
+    const shippingFree = isDelivery && totals.sub >= UMBRAL_ENVIO_GRATIS;
+    const delivery = isDelivery ? (shippingFree ? 0 : COSTO_ENVIO) : 0;
+    const remainingForFreeShipping = isDelivery ? Math.max(0, UMBRAL_ENVIO_GRATIS - totals.sub) : 0;
+    return {
+      ...totals,
+      isDelivery,
+      shippingFree,
+      delivery,
+      remainingForFreeShipping,
+      total: totals.total + delivery,
+    };
+  }
+
   function formatMoney(n) {
     return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n);
   }
@@ -1186,7 +1231,7 @@
     const listEl = document.getElementById("cart-list");
     const emptyEl = document.getElementById("cart-empty");
     const footEl = document.getElementById("cart-footer");
-    const t = computeTotals();
+    const t = calculateTotal();
     if (!cart.length) {
       emptyEl.classList.remove("hidden");
       listEl.classList.add("hidden");
@@ -1215,7 +1260,47 @@
       disc.classList.add("hidden");
       disc.classList.remove("flex");
     }
-    document.getElementById("cart-total").textContent = formatMoney(t.total);
+    const deliveryLine = document.getElementById("delivery-line");
+    const deliveryAmount = document.getElementById("cart-delivery");
+    if (t.isDelivery) {
+      deliveryLine.classList.remove("hidden");
+      deliveryLine.classList.add("flex");
+      if (t.shippingFree) {
+        deliveryAmount.textContent = "¡GRATIS!";
+        deliveryAmount.classList.add("text-green-300");
+        deliveryAmount.classList.remove("text-amicii-gold/75");
+      } else {
+        deliveryAmount.textContent = formatMoney(t.delivery);
+        deliveryAmount.classList.remove("text-green-300");
+      }
+    } else {
+      deliveryLine.classList.add("hidden");
+      deliveryLine.classList.remove("flex");
+      deliveryAmount.textContent = formatMoney(0);
+      deliveryAmount.classList.remove("text-green-300");
+    }
+    const deliveryProgress = document.getElementById("delivery-progress");
+    if (t.isDelivery) {
+      deliveryProgress.classList.remove("hidden");
+      if (t.shippingFree) {
+        deliveryProgress.textContent = "¡Felicitaciones! Tenés ENVÍO GRATIS por tu gran pedido 🚀";
+        deliveryProgress.classList.add("text-green-300", "border-green-300/35", "bg-green-950/20");
+        deliveryProgress.classList.remove("text-amicii-goldsoft", "border-amicii-gold/20", "bg-amicii-card/70");
+      } else {
+        deliveryProgress.textContent = `¡Estás a solo ${formatMoney(t.remainingForFreeShipping)} del ENVÍO GRATIS! 🍕`;
+        deliveryProgress.classList.remove("text-green-300", "border-green-300/35", "bg-green-950/20");
+        deliveryProgress.classList.add("text-amicii-goldsoft", "border-amicii-gold/20", "bg-amicii-card/70");
+      }
+    } else {
+      deliveryProgress.classList.add("hidden");
+      deliveryProgress.classList.remove("text-green-300", "border-green-300/35", "bg-green-950/20");
+      deliveryProgress.classList.add("text-amicii-goldsoft", "border-amicii-gold/20", "bg-amicii-card/70");
+    }
+    const totalEl = document.getElementById("cart-total");
+    totalEl.textContent = formatMoney(t.total);
+    totalEl.classList.remove("cart-total-flash");
+    requestAnimationFrame(() => totalEl.classList.add("cart-total-flash"));
+    setTimeout(() => totalEl.classList.remove("cart-total-flash"), 280);
     listEl.innerHTML = cart
       .map((line) => {
         const p = getProductById(line.id);
@@ -1351,7 +1436,10 @@
   }
 
   function buildWhatsappText(checkout) {
-    const t = computeTotals();
+    const t = calculateTotal(checkout.entrega);
+    const deliveryText = checkout.entrega === "domicilio"
+      ? (t.shippingFree ? "GRATIS" : formatMoney(t.delivery))
+      : formatMoney(0);
     const lines = [];
     lines.push(`Hola, soy ${checkout.clientName}. Quiero realizar el siguiente pedido.`);
     lines.push("");
@@ -1376,7 +1464,8 @@
     if (t.calzoneDiscount > 0) {
       lines.push(`*Desc. calzones (2+ pizzas):* −${formatMoney(t.calzoneDiscount)}`);
     }
-    lines.push(`*Total:* ${formatMoney(t.total)}`);
+    lines.push(`*Envío:* ${deliveryText}`);
+    lines.push(`*Total Final:* ${formatMoney(t.total)}`);
     lines.push("");
     lines.push("*Entrega:* " + (checkout.entrega === "domicilio" ? "Envío a domicilio" : "Retiro en local"));
     if (checkout.entrega === "domicilio") {
@@ -1542,6 +1631,7 @@
         field.removeAttribute("required");
         field.value = "";
       }
+      renderCart();
     });
   });
 
