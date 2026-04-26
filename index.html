@@ -573,12 +573,12 @@
         <span id="cart-discount">$0</span>
       </div>
       <div id="shipping-line" class="hidden items-center justify-between text-sm font-medium text-amicii-cream/85">
-        <span>Envío</span>
+        <span>Costo de Envío</span>
         <span id="cart-shipping">$0</span>
       </div>
       <p id="shipping-upsell" class="hidden rounded-lg border border-amicii-gold/20 bg-amicii-card/60 px-3 py-2 text-xs font-semibold text-amicii-goldsoft"></p>
       <div class="flex items-center justify-between border-t border-amicii-gold/15 pt-3">
-        <span class="font-semibold text-amicii-cream">Total</span>
+        <span class="font-semibold uppercase text-amicii-cream">TOTAL</span>
         <span id="cart-total" class="text-lg font-bold text-amicii-goldbright">$0</span>
       </div>
       <button
@@ -631,7 +631,7 @@
           <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Entrega <span class="text-amicii-tomato">*</span></p>
           <div class="space-y-2">
             <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
-              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 accent-amicii-tomato" required />
+              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 accent-amicii-tomato" checked required />
               <span class="text-sm font-medium text-amicii-cream">Envío a domicilio</span>
             </label>
             <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
@@ -687,6 +687,21 @@
               aria-required="true"
             />
         </div>
+        <div class="space-y-2 rounded-xl border border-amicii-gold/25 bg-amicii-card/65 p-3">
+          <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-amicii-cream/85">
+            <span>Subtotal</span>
+            <span id="checkout-subtotal">$0</span>
+          </div>
+          <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-amicii-cream/85">
+            <span>Costo de Envío</span>
+            <span id="checkout-shipping">$0</span>
+          </div>
+          <div class="flex items-center justify-between border-t border-amicii-gold/15 pt-2 text-sm font-bold uppercase tracking-wide text-amicii-goldbright">
+            <span>TOTAL</span>
+            <span id="checkout-total">$0</span>
+          </div>
+          <p id="checkout-shipping-upsell" class="hidden rounded-lg border border-amicii-gold/20 bg-amicii-black/45 px-2.5 py-2 text-[0.7rem] font-semibold text-amicii-goldsoft"></p>
+        </div>
         <div class="flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
@@ -736,6 +751,12 @@
           <span class="font-semibold text-amicii-goldsoft">entrega/retiro priorizado desde las 19:00 hs</span>, al abrir el servicio.
         </p>
         <p class="text-xs font-medium text-amicii-cream/65">Podés ajustar detalles (domicilio, pago) por WhatsApp si hace falta.</p>
+        <div class="space-y-1 rounded-lg border border-amicii-gold/20 bg-amicii-black/45 px-3 py-2 text-xs font-semibold">
+          <p class="flex items-center justify-between"><span>Subtotal</span><span id="confirm-subtotal">$0</span></p>
+          <p class="flex items-center justify-between"><span>Costo de Envío</span><span id="confirm-shipping">$0</span></p>
+          <p class="flex items-center justify-between border-t border-amicii-gold/15 pt-1 text-amicii-goldbright"><span>TOTAL</span><span id="confirm-total">$0</span></p>
+        </div>
+        <p id="confirm-shipping-upsell" class="hidden rounded-lg border border-amicii-gold/20 bg-amicii-black/45 px-3 py-2 text-[0.68rem] font-semibold text-amicii-goldsoft"></p>
       </div>
       <div class="flex flex-col gap-2 border-t border-amicii-gold/20 bg-amicii-black/50 px-6 py-4 sm:flex-row sm:justify-end">
         <button
@@ -1051,7 +1072,7 @@
   }
 
   function getSelectedDeliveryMethod() {
-    return document.querySelector('#checkout-form input[name="entrega"]:checked')?.value || "retiro";
+    return document.querySelector('#checkout-form input[name="entrega"]:checked')?.value || "domicilio";
   }
 
   function calculateCartTotals(deliveryMethod = getSelectedDeliveryMethod()) {
@@ -1071,6 +1092,49 @@
       finalTotal: baseTotals.total + shippingFee,
       deliveryMethod,
     };
+  }
+
+  function renderPersistentShippingUpsell(targetEl, t) {
+    if (!targetEl) return;
+    if (t.deliveryMethod === "domicilio" && !t.isShippingFree && t.amountToFreeShipping > 0) {
+      targetEl.classList.remove("hidden");
+      targetEl.textContent = `Te faltan ${formatMoney(t.amountToFreeShipping)} para el Envío Gratis`;
+    } else {
+      targetEl.classList.add("hidden");
+      targetEl.textContent = "";
+    }
+  }
+
+  function applyShippingValueStyles(el, t) {
+    if (!el) return;
+    el.classList.remove("text-amicii-gold", "font-bold");
+    if (t.isShippingFree && t.deliveryMethod === "domicilio") {
+      el.textContent = "¡GRATIS!";
+      el.classList.add("text-amicii-gold", "font-bold");
+      return;
+    }
+    el.textContent = t.deliveryMethod === "domicilio" ? formatMoney(t.shippingFee) : "Sin cargo";
+  }
+
+  function renderCheckoutAndConfirmSummaries(t) {
+    const checkoutSubtotal = document.getElementById("checkout-subtotal");
+    const checkoutShipping = document.getElementById("checkout-shipping");
+    const checkoutTotal = document.getElementById("checkout-total");
+    if (checkoutSubtotal && checkoutShipping && checkoutTotal) {
+      checkoutSubtotal.textContent = formatMoney(t.sub);
+      applyShippingValueStyles(checkoutShipping, t);
+      checkoutTotal.textContent = formatMoney(t.finalTotal);
+      renderPersistentShippingUpsell(document.getElementById("checkout-shipping-upsell"), t);
+    }
+    const confirmSubtotal = document.getElementById("confirm-subtotal");
+    const confirmShipping = document.getElementById("confirm-shipping");
+    const confirmTotal = document.getElementById("confirm-total");
+    if (confirmSubtotal && confirmShipping && confirmTotal) {
+      confirmSubtotal.textContent = formatMoney(t.sub);
+      applyShippingValueStyles(confirmShipping, t);
+      confirmTotal.textContent = formatMoney(t.finalTotal);
+      renderPersistentShippingUpsell(document.getElementById("confirm-shipping-upsell"), t);
+    }
   }
 
   function formatMoney(n) {
@@ -1247,30 +1311,12 @@
     const shippingLine = document.getElementById("shipping-line");
     const shippingValue = document.getElementById("cart-shipping");
     const shippingUpsell = document.getElementById("shipping-upsell");
-    if (t.deliveryMethod === "domicilio") {
-      shippingLine.classList.remove("hidden");
-      shippingLine.classList.add("flex");
-      if (t.isShippingFree) {
-        shippingValue.textContent = "¡GRATIS!";
-        shippingValue.classList.add("text-amicii-gold", "font-bold");
-      } else {
-        shippingValue.textContent = formatMoney(t.shippingFee);
-        shippingValue.classList.remove("text-amicii-gold", "font-bold");
-      }
-      if (!t.isShippingFree && t.amountToFreeShipping > 0) {
-        shippingUpsell.classList.remove("hidden");
-        shippingUpsell.textContent = `Agregá ${formatMoney(t.amountToFreeShipping)} más para tener ENVÍO GRATIS`;
-      } else {
-        shippingUpsell.classList.add("hidden");
-      }
-    } else {
-      shippingLine.classList.add("hidden");
-      shippingLine.classList.remove("flex");
-      shippingValue.textContent = formatMoney(0);
-      shippingValue.classList.remove("text-amicii-gold", "font-bold");
-      shippingUpsell.classList.add("hidden");
-    }
+    shippingLine.classList.remove("hidden");
+    shippingLine.classList.add("flex");
+    applyShippingValueStyles(shippingValue, t);
+    renderPersistentShippingUpsell(shippingUpsell, t);
     document.getElementById("cart-total").textContent = formatMoney(t.finalTotal);
+    renderCheckoutAndConfirmSummaries(t);
     listEl.innerHTML = cart
       .map((line) => {
         const p = getProductById(line.id);
@@ -1332,7 +1378,12 @@
     }
     closeCart();
     document.getElementById("checkout-form").reset();
-    document.getElementById("field-direccion").classList.add("hidden");
+    const domicilioRadio = document.querySelector('#checkout-form input[name="entrega"][value="domicilio"]');
+    if (domicilioRadio) domicilioRadio.checked = true;
+    const wrapDireccion = document.getElementById("field-direccion");
+    const direccionField = document.getElementById("direccion");
+    wrapDireccion.classList.remove("hidden");
+    direccionField.setAttribute("required", "required");
     const modal = document.getElementById("checkout-modal");
     const content = document.getElementById("checkout-modal-content");
     modal.classList.remove("hidden");
@@ -1344,6 +1395,7 @@
       modal.style.opacity = "1";
       if (content) content.style.transform = "scale(1)";
     });
+    renderCart();
     updateScheduleUI();
   }
 
@@ -1407,7 +1459,7 @@
 
   function buildWhatsappText(checkout) {
     const t = calculateCartTotals(checkout.entrega);
-    const shippingText = t.isShippingFree ? "GRATIS" : formatMoney(t.shippingFee);
+    const shippingText = t.deliveryMethod === "retiro" ? "Sin cargo" : (t.isShippingFree ? "GRATIS" : formatMoney(t.shippingFee));
     const lines = [];
     lines.push(`Hola, soy ${checkout.clientName}. Quiero realizar el siguiente pedido.`);
     lines.push("");
@@ -1432,7 +1484,7 @@
     if (t.calzoneDiscount > 0) {
       lines.push(`*Desc. calzones (2+ pizzas):* −${formatMoney(t.calzoneDiscount)}`);
     }
-    lines.push(`*Envío:* ${shippingText}`);
+    lines.push(`*Costo de Envío:* ${shippingText}`);
     lines.push(`*Total Final:* ${formatMoney(t.finalTotal)}`);
     lines.push("");
     lines.push("*Entrega:* " + (checkout.entrega === "domicilio" ? "Envío a domicilio" : "Retiro en local"));
