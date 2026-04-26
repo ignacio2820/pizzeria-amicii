@@ -593,10 +593,10 @@
         type="button"
         id="btn-proceed-checkout"
         class="btn-amicii-primary w-full rounded-full py-3.5 text-sm font-bold uppercase tracking-wide"
-        data-label-open="IR A LA RESERVA"
-        data-label-closed="Completar reserva"
+        data-label-open="Continuar con el pedido"
+        data-label-closed="Continuar con el pedido"
       >
-        IR A LA RESERVA
+        Continuar con el pedido
       </button>
       <button
         type="button"
@@ -639,7 +639,7 @@
           <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Entrega <span class="text-amicii-tomato">*</span></p>
           <div class="space-y-2">
             <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
-              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 accent-amicii-tomato" checked required />
+              <input type="radio" name="entrega" value="domicilio" class="h-4 w-4 accent-amicii-tomato" required />
               <span class="text-sm font-medium text-amicii-cream">Envío a domicilio</span>
             </label>
             <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
@@ -886,9 +886,11 @@
     if (notice) notice.classList.toggle("hidden", open);
     const proceed = document.getElementById("btn-proceed-checkout");
     if (proceed) {
-      proceed.textContent = open
-        ? (proceed.getAttribute("data-label-open") || "IR A LA RESERVA")
-        : (proceed.getAttribute("data-label-closed") || "Completar reserva");
+      const t = calculateCartTotals();
+      const proceedLabel = open
+        ? (proceed.getAttribute("data-label-open") || "Continuar con el pedido")
+        : (proceed.getAttribute("data-label-closed") || "Continuar con el pedido");
+      proceed.textContent = `${proceedLabel} · ${formatMoney(t.finalTotal)}`;
     }
     const primaryCta = document.getElementById("btn-primary-cta");
     if (primaryCta) {
@@ -1080,7 +1082,7 @@
   }
 
   function getSelectedDeliveryMethod() {
-    return document.querySelector('#checkout-form input[name="entrega"]:checked')?.value || "domicilio";
+    return document.querySelector('#checkout-form input[name="entrega"]:checked')?.value || "";
   }
 
   function calculateCartTotals(deliveryMethod = getSelectedDeliveryMethod()) {
@@ -1121,7 +1123,7 @@
       el.classList.add("text-amicii-gold", "font-bold");
       return;
     }
-    el.textContent = t.deliveryMethod === "domicilio" ? formatMoney(t.shippingFee) : "Sin cargo";
+    el.textContent = t.deliveryMethod === "domicilio" ? formatMoney(t.shippingFee) : formatMoney(0);
   }
 
   function renderCheckoutAndConfirmSummaries(t) {
@@ -1330,6 +1332,10 @@
     applyShippingValueStyles(shippingValue, t);
     renderPersistentShippingUpsell(shippingUpsell, t);
     document.getElementById("cart-total").textContent = formatMoney(t.finalTotal);
+    const proceedBtn = document.getElementById("btn-proceed-checkout");
+    if (proceedBtn) {
+      proceedBtn.textContent = `${proceedBtn.getAttribute("data-label-open") || "Continuar con el pedido"} · ${formatMoney(t.finalTotal)}`;
+    }
     renderCheckoutAndConfirmSummaries(t);
     listEl.innerHTML = cart
       .map((line) => {
@@ -1392,12 +1398,10 @@
     }
     closeCart();
     document.getElementById("checkout-form").reset();
-    const domicilioRadio = document.querySelector('#checkout-form input[name="entrega"][value="domicilio"]');
-    if (domicilioRadio) domicilioRadio.checked = true;
     const wrapDireccion = document.getElementById("field-direccion");
     const direccionField = document.getElementById("direccion");
-    wrapDireccion.classList.remove("hidden");
-    direccionField.setAttribute("required", "required");
+    wrapDireccion.classList.add("hidden");
+    direccionField.removeAttribute("required");
     const modal = document.getElementById("checkout-modal");
     const content = document.getElementById("checkout-modal-content");
     modal.classList.remove("hidden");
@@ -1439,7 +1443,7 @@
       return null;
     }
     if (!entrega) {
-      alert("Elegí un método de entrega.");
+      alert("Por favor, seleccioná si preferís envío o retiro.");
       return null;
     }
     if (entrega === "domicilio" && !direccion) {
@@ -1473,7 +1477,7 @@
 
   function buildWhatsappText(checkout) {
     const t = calculateCartTotals(checkout.entrega);
-    const shippingText = t.deliveryMethod === "retiro" ? "Sin cargo" : (t.isShippingFree ? "GRATIS" : formatMoney(t.shippingFee));
+    const shippingText = t.deliveryMethod === "retiro" ? formatMoney(0) : (t.isShippingFree ? "GRATIS" : formatMoney(t.shippingFee));
     const lines = [];
     lines.push(`Hola, soy ${checkout.clientName}. Quiero realizar el siguiente pedido.`);
     lines.push("");
