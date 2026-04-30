@@ -208,7 +208,20 @@
     }
     #cooking-time-toast {
       pointer-events: none;
-      max-width: min(18rem, calc(100vw - 3rem));
+      max-width: min(22rem, calc(100vw - 2.5rem));
+      font-size: clamp(0.9375rem, 3.4vw, 1.0625rem);
+      line-height: 1.45;
+      font-weight: 600;
+      font-style: normal;
+      letter-spacing: 0.01em;
+      color: #faf6ec;
+      background: linear-gradient(165deg, #14100c 0%, #0a0806 100%);
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 248, 220, 0.08) inset,
+        0 0 24px rgba(212, 175, 55, 0.12);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
       opacity: 0;
       visibility: hidden;
       transform: translateY(10px);
@@ -530,7 +543,7 @@
   <div class="fixed bottom-6 right-6 z-50 flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-2">
     <p
       id="cooking-time-toast"
-      class="font-display max-w-[min(18rem,calc(100vw-3rem))] rounded-xl border border-amicii-gold/35 bg-amicii-black/88 px-3 py-2.5 text-center text-[0.78rem] font-medium italic leading-snug text-amicii-gold shadow-xl shadow-black/50 backdrop-blur-sm"
+      class="font-display rounded-2xl px-4 py-3 text-center sm:px-5 sm:py-3.5"
       role="status"
       aria-live="polite"
     ></p>
@@ -966,7 +979,7 @@
   const OPEN_HOUR = 19;
   const OPEN_MINUTE = 0;
   const CLOSE_HOUR = 23;
-  const SHIPPING_CONFIG = { cost: 6000, threshold: 30000 };
+  const SHIPPING_CONFIG = { cost: 4000, threshold: 30000 };
   const COSTO_ENVIO = SHIPPING_CONFIG.cost;
   const UMBRAL_ENVIO_GRATIS = SHIPPING_CONFIG.threshold;
   const RESERVA_WHATSAPP_TAG = "[RESERVA FUERA DE HORARIO - ENTREGA PROGRAMADA 19:00 HS]";
