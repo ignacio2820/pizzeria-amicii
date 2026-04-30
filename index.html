@@ -206,6 +206,49 @@
       color: #ffe27a !important;
       text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
     }
+    #cooking-time-toast {
+      pointer-events: none;
+      max-width: min(18rem, calc(100vw - 3rem));
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s ease;
+    }
+    #cooking-time-toast.cooking-toast--on {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    #cooking-time-toast.cooking-toast--hiding {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(6px);
+    }
+    .btn-repeat-last-order-elite {
+      width: 100%;
+      max-width: 42rem;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      background: linear-gradient(180deg, #e8c547 0%, #d4af37 48%, #b8941f 100%);
+      color: #1a1206;
+      border: 1px solid rgba(212, 175, 55, 0.9);
+      box-shadow:
+        0 10px 32px rgba(212, 175, 55, 0.38),
+        0 0 22px rgba(255, 215, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.28s ease, filter 0.22s ease;
+    }
+    .btn-repeat-last-order-elite:hover {
+      filter: brightness(1.07);
+      box-shadow:
+        0 14px 40px rgba(212, 175, 55, 0.48),
+        0 0 28px rgba(255, 215, 0, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    .btn-repeat-last-order-elite:active {
+      transform: scale(0.99);
+    }
     @media (max-width: 767px) {
       #site-header.header-scrolled img.logo-mobile {
         max-height: 2.75rem;
@@ -398,6 +441,26 @@
           <h2 class="font-display text-3xl font-bold text-amicii-goldsoft sm:text-4xl">Menú Principal</h2>
           <p class="mt-3 text-sm font-medium text-amicii-cream/80">El arte de la masa madre y el fuego. Elegí tu favorita y disfrutá el verdadero sabor artesanal.</p>
         </div>
+        <div
+          id="horno-estado-banner"
+          class="mt-5 flex items-start justify-center gap-2.5 rounded-2xl border border-amicii-tomato/30 bg-gradient-to-r from-amicii-tomato/18 via-amicii-tomato/10 to-amicii-tomato/18 px-3 py-2.5 shadow-inner shadow-black/25 sm:mt-6 sm:items-center sm:gap-3 sm:px-5 sm:py-3"
+          role="status"
+          aria-live="polite"
+        >
+          <span class="inline-flex shrink-0 select-none text-base leading-none text-amicii-cream sm:text-lg animate-pulse" aria-hidden="true">🔥</span>
+          <p id="horno-estado-texto" class="text-left text-[0.7rem] font-medium leading-snug tracking-wide text-amicii-cream sm:text-center sm:text-sm">
+            Hornos a 450°C • Tiempo estimado de cocción: 20-25 min
+          </p>
+        </div>
+        <div id="repeat-last-order-wrap" class="mt-4 hidden w-full px-1 sm:mt-5">
+          <button
+            type="button"
+            id="btn-repeat-last-order"
+            class="btn-repeat-last-order-elite rounded-2xl px-4 py-3.5 text-center text-sm font-bold uppercase tracking-wide sm:py-4 sm:text-base"
+          >
+            <span id="btn-repeat-last-order-text" class="block leading-snug">🍕 ¡Pedir mi Combo de Siempre!</span>
+          </button>
+        </div>
         <div class="mt-6 space-y-16 sm:mt-14 sm:space-y-20 lg:mt-16">
           <div>
             <h3 class="font-display text-2xl font-semibold text-amicii-cream sm:text-3xl">Nuestras Pizzas Clásicas</h3>
@@ -464,19 +527,27 @@
     </footer>
   </div>
 
-  <button
-    type="button"
-    id="btn-floating-cart"
-    class="btn-amicii-outline fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full shadow-2xl shadow-black/50 transition hover:scale-105"
-    aria-label="Abrir carrito"
-  >
-    <span class="relative">
-      <svg class="h-7 w-7 text-amicii-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-      <span id="float-cart-badge" class="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amicii-gold px-1.5 text-[0.65rem] font-bold text-amicii-black">0</span>
-    </span>
-  </button>
+  <div class="fixed bottom-6 right-6 z-50 flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-2">
+    <p
+      id="cooking-time-toast"
+      class="font-display max-w-[min(18rem,calc(100vw-3rem))] rounded-xl border border-amicii-gold/35 bg-amicii-black/88 px-3 py-2.5 text-center text-[0.78rem] font-medium italic leading-snug text-amicii-gold shadow-xl shadow-black/50 backdrop-blur-sm"
+      role="status"
+      aria-live="polite"
+    ></p>
+    <button
+      type="button"
+      id="btn-floating-cart"
+      class="btn-amicii-outline flex h-16 w-16 items-center justify-center rounded-full shadow-2xl shadow-black/50 transition hover:scale-105"
+      aria-label="Abrir carrito"
+    >
+      <span class="relative">
+        <svg class="h-7 w-7 text-amicii-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span id="float-cart-badge" class="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amicii-gold px-1.5 text-[0.65rem] font-bold text-amicii-black">0</span>
+      </span>
+    </button>
+  </div>
 
   <div
     id="chat-widget"
@@ -635,6 +706,14 @@
         <strong>reservado</strong> para atención desde las <span class="text-amicii-goldsoft">19:00 hs</span> (o retiro/entrega según coordinen por WhatsApp).
       </p>
       <form id="checkout-form" class="mt-6 space-y-6">
+        <p
+          id="checkout-welcome-back"
+          class="hidden rounded-xl border border-amicii-gold/30 bg-amicii-tomato/10 px-3 py-2.5 text-xs font-medium leading-relaxed text-amicii-goldsoft"
+          role="status"
+          aria-live="polite"
+        >
+          ¡Bienvenido de vuelta! Precargamos tus datos para que tu pedido salga más rápido
+        </p>
         <div>
           <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Entrega <span class="text-amicii-tomato">*</span></p>
           <div class="space-y-2">
@@ -660,15 +739,73 @@
         </div>
         <div>
           <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Pago <span class="text-amicii-tomato">*</span></p>
-          <div class="space-y-2">
-            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
-              <input type="radio" name="pago" value="local" class="h-4 w-4 accent-amicii-tomato" required />
-              <span class="text-sm font-medium text-amicii-cream">Pago en el local (efectivo o tarjeta al retirar/recibir)</span>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <label class="group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-amicii-gold/25 bg-amicii-card/75 px-3 py-3.5 transition hover:border-amicii-goldbright/50 sm:flex-col sm:items-stretch sm:px-3 sm:py-4">
+              <input type="radio" name="pago" value="efectivo" class="peer sr-only" required />
+              <span class="text-lg sm:text-center" aria-hidden="true">💵</span>
+              <span class="min-w-0 flex-1 sm:text-center">
+                <span class="block text-sm font-semibold text-amicii-cream">Efectivo</span>
+                <span class="mt-0.5 block text-[0.65rem] font-medium uppercase tracking-wide text-amicii-cream/60">En local / delivery</span>
+              </span>
+              <span class="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-transparent transition peer-checked:ring-amicii-goldbright/60" aria-hidden="true"></span>
             </label>
-            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amicii-gold/25 bg-amicii-card/70 p-3 transition hover:border-amicii-goldbright/45 has-[:checked]:border-amicii-goldbright/60">
-              <input type="radio" name="pago" value="mercadopago" class="h-4 w-4 accent-amicii-tomato" required />
-              <span class="text-sm font-medium text-amicii-cream">Mercado Pago</span>
+            <label class="group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-amicii-gold/25 bg-amicii-card/75 px-3 py-3.5 transition hover:border-amicii-goldbright/50 sm:flex-col sm:items-stretch sm:px-3 sm:py-4">
+              <input type="radio" name="pago" value="mercadopago" class="peer sr-only" />
+              <span class="text-lg sm:text-center" aria-hidden="true">📱</span>
+              <span class="min-w-0 flex-1 sm:text-center">
+                <span class="block text-sm font-semibold text-amicii-cream">Mercado Pago</span>
+                <span class="mt-0.5 block text-[0.65rem] font-medium uppercase tracking-wide text-amicii-cream/60">QR / link</span>
+              </span>
+              <span class="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-transparent transition peer-checked:ring-amicii-goldbright/60" aria-hidden="true"></span>
             </label>
+            <label class="group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-amicii-gold/25 bg-amicii-card/75 px-3 py-3.5 transition hover:border-amicii-goldbright/50 sm:flex-col sm:items-stretch sm:px-3 sm:py-4">
+              <input type="radio" name="pago" value="transferencia" class="peer sr-only" />
+              <span class="text-lg sm:text-center" aria-hidden="true">🏦</span>
+              <span class="min-w-0 flex-1 sm:text-center">
+                <span class="block text-sm font-semibold text-amicii-cream">Transferencia</span>
+                <span class="mt-0.5 block text-[0.65rem] font-medium uppercase tracking-wide text-amicii-cream/60">Bancaria</span>
+              </span>
+              <span class="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-transparent transition peer-checked:ring-amicii-goldbright/60" aria-hidden="true"></span>
+            </label>
+          </div>
+          <div
+            id="field-transferencia"
+            class="mt-3 hidden space-y-2.5 rounded-xl border border-amicii-gold/30 bg-gradient-to-b from-amicii-card/80 to-amicii-black/55 p-3 ring-1 ring-inset ring-amicii-gold/10"
+            role="region"
+            aria-labelledby="transferencia-heading"
+          >
+            <p id="transferencia-heading" class="text-xs font-semibold uppercase tracking-wider text-amicii-gold/90">Datos para transferencia — AMICII</p>
+            <div class="space-y-2">
+              <div class="flex flex-wrap items-end justify-between gap-2 rounded-lg border border-amicii-gold/20 bg-amicii-black/40 px-2.5 py-2">
+                <div class="min-w-0 flex-1">
+                  <span class="text-[0.65rem] font-medium uppercase tracking-wide text-amicii-cream/50">Banco</span>
+                  <p id="amicii-bank-banco" class="text-sm font-semibold text-amicii-cream">Banco (completar)</p>
+                </div>
+                <button type="button" class="btn-copy-bank-data btn-amicii-outline shrink-0 rounded-lg px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wide" data-copy-target="amicii-bank-banco" aria-label="Copiar banco">Copiar</button>
+              </div>
+              <div class="flex flex-wrap items-end justify-between gap-2 rounded-lg border border-amicii-gold/20 bg-amicii-black/40 px-2.5 py-2">
+                <div class="min-w-0 flex-1">
+                  <span class="text-[0.65rem] font-medium uppercase tracking-wide text-amicii-cream/50">CBU</span>
+                  <p id="amicii-bank-cbu" class="break-all text-sm font-semibold text-amicii-cream">0000000000000000000000</p>
+                </div>
+                <button type="button" class="btn-copy-bank-data btn-amicii-outline shrink-0 rounded-lg px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wide" data-copy-target="amicii-bank-cbu" aria-label="Copiar CBU">Copiar</button>
+              </div>
+              <div class="flex flex-wrap items-end justify-between gap-2 rounded-lg border border-amicii-gold/20 bg-amicii-black/40 px-2.5 py-2">
+                <div class="min-w-0 flex-1">
+                  <span class="text-[0.65rem] font-medium uppercase tracking-wide text-amicii-cream/50">Alias</span>
+                  <p id="amicii-bank-alias" class="break-all text-sm font-semibold text-amicii-cream">AMICII.PIZZA</p>
+                </div>
+                <button type="button" class="btn-copy-bank-data btn-amicii-outline shrink-0 rounded-lg px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wide" data-copy-target="amicii-bank-alias" aria-label="Copiar alias">Copiar</button>
+              </div>
+              <div class="flex flex-wrap items-end justify-between gap-2 rounded-lg border border-amicii-gold/20 bg-amicii-black/40 px-2.5 py-2">
+                <div class="min-w-0 flex-1">
+                  <span class="text-[0.65rem] font-medium uppercase tracking-wide text-amicii-cream/50">Titular</span>
+                  <p id="amicii-bank-titular" class="text-sm font-semibold text-amicii-cream">Nombre del titular (completar)</p>
+                </div>
+                <button type="button" class="btn-copy-bank-data btn-amicii-outline shrink-0 rounded-lg px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wide" data-copy-target="amicii-bank-titular" aria-label="Copiar titular">Copiar</button>
+              </div>
+            </div>
+            <p class="text-[0.65rem] leading-relaxed text-amicii-cream/55">Por favor, enviá el comprobante de transferencia por este mismo chat de WhatsApp al finalizar.</p>
           </div>
         </div>
         <div>
@@ -694,6 +831,20 @@
               required
               aria-required="true"
             />
+        </div>
+        <div>
+          <label for="clientPhone" class="text-xs font-semibold uppercase tracking-wider text-amicii-goldbright">Teléfono <span class="text-amicii-tomato">*</span></label>
+          <input
+            type="tel"
+            id="clientPhone"
+            name="clientPhone"
+            class="mt-1 w-full rounded-xl border border-amicii-gold/25 bg-amicii-black/60 px-3 py-2.5 font-body text-sm font-medium text-amicii-cream placeholder-amicii-cream/35 focus:border-amicii-tomato/80 focus:outline-none focus:ring-2 focus:ring-amicii-tomato/50 invalid:border-red-500/50 transition-all duration-300"
+            placeholder="Código de área + número"
+            autocomplete="tel"
+            inputmode="tel"
+            required
+            aria-required="true"
+          />
         </div>
         <div class="space-y-2 rounded-2xl border border-amicii-gold/25 bg-gradient-to-b from-amicii-card/80 to-amicii-black/60 p-4 shadow-inner shadow-black/30">
           <p class="text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-amicii-gold/80">Resumen de costos</p>
@@ -796,7 +947,16 @@
 (function () {
   "use strict";
   /** Carrito: localStorage */
-  const LS_KEY = "amicii-cart";
+  /** Carrito por sesión de pestaña (no persiste entre pestañas nuevas / nueva sesión) */
+  const SESSION_CART_KEY = "amicii-cart";
+  /** Datos de cliente recurrente */
+  const LS_CUSTOMER_NAME = "amicii_customer_name";
+  const LS_CUSTOMER_PHONE = "amicii_customer_phone";
+  const LS_CUSTOMER_ADDRESS = "amicii_customer_address";
+  const LS_LAST_ORDER = "amicii_last_order";
+  try {
+    localStorage.removeItem("amicii-cart");
+  } catch (e) {}
   const LS_HORA = "amicii-reserva-hora";
   const LS_CHAT_SEEN = "amicii-chat-seen";
   /** Código de país + número sin + ni 0 (ej. Argentina: 54 + sin 0 del área) */
@@ -855,6 +1015,21 @@
     const m = new Date();
     const mins = m.getHours() * 60 + m.getMinutes();
     return mins >= OPEN_HOUR * 60 + OPEN_MINUTE && mins < CLOSE_HOUR * 60;
+  }
+
+  function updateHornoEstadoBanner() {
+    const textoEl = document.getElementById("horno-estado-texto");
+    if (!textoEl) return;
+    const now = new Date();
+    const HORA_ACTUAL = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+    const esHoraPico = HORA_ACTUAL > 21;
+    if (esHoraPico) {
+      textoEl.textContent =
+        "Hornos al máximo • ¡Pedidos volando! • Tiempo estimado de cocción: 25-30 min";
+    } else {
+      textoEl.textContent =
+        "Hornos a 450°C • Tiempo estimado de cocción: 20-25 min";
+    }
   }
 
   function updateScheduleUI() {
@@ -1029,7 +1204,7 @@
 
   function loadCart() {
     try {
-      const raw = localStorage.getItem(LS_KEY);
+      const raw = sessionStorage.getItem(SESSION_CART_KEY);
       if (!raw) return [];
       const data = JSON.parse(raw);
       return Array.isArray(data) ? data : [];
@@ -1039,10 +1214,141 @@
   }
 
   function saveCart(items) {
-    localStorage.setItem(LS_KEY, JSON.stringify(items));
+    try {
+      sessionStorage.setItem(SESSION_CART_KEY, JSON.stringify(items));
+    } catch (e) {}
+  }
+
+  function persistCustomerData(checkout) {
+    try {
+      if (checkout.clientName) localStorage.setItem(LS_CUSTOMER_NAME, checkout.clientName);
+      if (checkout.clientPhone) localStorage.setItem(LS_CUSTOMER_PHONE, checkout.clientPhone);
+      localStorage.setItem(LS_CUSTOMER_ADDRESS, checkout.direccion || "");
+    } catch (e) {}
+  }
+
+  /**
+   * @param {{ showWelcome?: boolean }} opts
+   */
+  function restoreCustomerFromStorage(opts) {
+    const showWelcome = !!(opts && opts.showWelcome);
+    const form = document.getElementById("checkout-form");
+    if (!form) return;
+    let name = "";
+    let phone = "";
+    let addr = "";
+    try {
+      name = localStorage.getItem(LS_CUSTOMER_NAME) || "";
+      phone = localStorage.getItem(LS_CUSTOMER_PHONE) || "";
+      addr = localStorage.getItem(LS_CUSTOMER_ADDRESS) || "";
+    } catch (e) {
+      return;
+    }
+    let filled = false;
+    const nameEl = document.getElementById("clientName");
+    const phoneEl = document.getElementById("clientPhone");
+    const addrEl = document.getElementById("direccion");
+    if (name && nameEl) {
+      nameEl.value = name;
+      filled = true;
+    }
+    if (phone && phoneEl) {
+      phoneEl.value = phone;
+      filled = true;
+    }
+    if (addr && addrEl) {
+      addrEl.value = addr;
+      filled = true;
+    }
+    const banner = document.getElementById("checkout-welcome-back");
+    if (banner) {
+      if (filled && showWelcome) banner.classList.remove("hidden");
+      else banner.classList.add("hidden");
+    }
   }
 
   let cart = loadCart();
+
+  function lastOrderTotalQty(lines) {
+    if (!Array.isArray(lines)) return 0;
+    return lines.reduce((a, l) => {
+      const q = Number(l && l.qty);
+      return a + (Number.isFinite(q) && q > 0 ? q : 0);
+    }, 0);
+  }
+
+  function saveLastOrderSnapshot() {
+    try {
+      const snapshot = cart.map((line) => ({ id: line.id, qty: line.qty }));
+      localStorage.setItem(LS_LAST_ORDER, JSON.stringify(snapshot));
+    } catch (e) {}
+  }
+
+  function updateRepeatLastOrderUi() {
+    const wrap = document.getElementById("repeat-last-order-wrap");
+    const label = document.getElementById("btn-repeat-last-order-text");
+    if (!wrap || !label) return;
+    let raw;
+    try {
+      raw = localStorage.getItem(LS_LAST_ORDER);
+    } catch (e) {
+      return;
+    }
+    if (!raw) {
+      wrap.classList.add("hidden");
+      return;
+    }
+    let lines;
+    try {
+      lines = JSON.parse(raw);
+    } catch (e2) {
+      wrap.classList.add("hidden");
+      return;
+    }
+    if (!Array.isArray(lines) || !lines.length) {
+      wrap.classList.add("hidden");
+      return;
+    }
+    const n = lastOrderTotalQty(lines);
+    if (n <= 0) {
+      wrap.classList.add("hidden");
+      return;
+    }
+    label.textContent = `🍕 ¡Pedir mi Combo de Siempre! (${n} productos)`;
+    wrap.classList.remove("hidden");
+  }
+
+  function applyRepeatLastOrder() {
+    let raw;
+    try {
+      raw = localStorage.getItem(LS_LAST_ORDER);
+    } catch (e) {
+      return;
+    }
+    if (!raw) return;
+    let lines;
+    try {
+      lines = JSON.parse(raw);
+    } catch (e2) {
+      return;
+    }
+    if (!Array.isArray(lines) || !lines.length) return;
+    const next = [];
+    for (const l of lines) {
+      if (!l || !l.id) continue;
+      const q = Math.max(1, Math.floor(Number(l.qty)) || 1);
+      if (!getProductById(l.id)) continue;
+      next.push({ id: l.id, qty: q });
+    }
+    if (!next.length) return;
+    cart = next;
+    saveCart(cart);
+    playSfx("add");
+    updateBadges();
+    renderCart();
+    maybeTriggerPromoHint();
+    openCart();
+  }
 
   function countPizzas() {
     return cart.reduce((acc, line) => {
@@ -1225,6 +1531,44 @@
     document.getElementById("grid-calzones").innerHTML = cz.map(renderProductCard).join("");
   }
 
+  const cookingToastTimers = { t1: null, t2: null, seq: 0 };
+
+  function showCookingTimeToast(category) {
+    const el = document.getElementById("cooking-time-toast");
+    if (!el) return;
+    const pizzaMsg =
+      "¡Excelente elección! En 20 minutos tu pizza estará dorada y lista para salir del horno a leña.";
+    const calzoneMsg =
+      "¡Sabia decisión! Recordá que un buen Calzone necesita sus 40 minutos de cocción lenta para que el relleno esté perfecto.";
+    let msg = "";
+    if (category === "pizza") msg = pizzaMsg;
+    else if (category === "calzone") msg = calzoneMsg;
+    else return;
+
+    cookingToastTimers.seq += 1;
+    const mySeq = cookingToastTimers.seq;
+    window.clearTimeout(cookingToastTimers.t1);
+    window.clearTimeout(cookingToastTimers.t2);
+
+    el.classList.remove("cooking-toast--hiding");
+    el.textContent = msg;
+    requestAnimationFrame(() => {
+      if (mySeq !== cookingToastTimers.seq) return;
+      el.classList.add("cooking-toast--on");
+    });
+
+    cookingToastTimers.t1 = window.setTimeout(() => {
+      if (mySeq !== cookingToastTimers.seq) return;
+      el.classList.remove("cooking-toast--on");
+      el.classList.add("cooking-toast--hiding");
+      cookingToastTimers.t2 = window.setTimeout(() => {
+        if (mySeq !== cookingToastTimers.seq) return;
+        el.classList.remove("cooking-toast--hiding");
+        el.textContent = "";
+      }, 480);
+    }, 4000);
+  }
+
   function addToCart(id) {
     const line = cart.find((l) => l.id === id);
     if (line) line.qty += 1;
@@ -1232,6 +1576,10 @@
     saveCart(cart);
     playSfx("add");
     updateBadges();
+    const addedProduct = getProductById(id);
+    if (addedProduct && (addedProduct.category === "pizza" || addedProduct.category === "calzone")) {
+      showCookingTimeToast(addedProduct.category);
+    }
     renderCart();
     // Removing auto-chat on add to cart
     // if (!isKitchenOpen()) {
@@ -1416,6 +1764,7 @@
     const direccionField = document.getElementById("direccion");
     wrapDireccion.classList.remove("hidden");
     direccionField.setAttribute("required", "required");
+    restoreCustomerFromStorage({ showWelcome: true });
     const modal = document.getElementById("checkout-modal");
     const content = document.getElementById("checkout-modal-content");
     modal.classList.remove("hidden");
@@ -1430,6 +1779,7 @@
     const totals = calculateCartTotals(getSelectedDeliveryMethod());
     renderCheckoutAndConfirmSummaries(totals);
     renderCart();
+    updateTransferenciaPanel();
     updateScheduleUI();
   }
 
@@ -1447,15 +1797,34 @@
     }, 185);
   }
 
+  function formatPagoLabelWhatsapp(code) {
+    if (code === "efectivo") return "Efectivo (en local / delivery)";
+    if (code === "mercadopago") return "Mercado Pago (QR / link)";
+    if (code === "transferencia") return "Transferencia bancaria";
+    return code ? String(code) : "(no indicado)";
+  }
+
+  function updateTransferenciaPanel() {
+    const box = document.getElementById("field-transferencia");
+    if (!box) return;
+    const v = document.querySelector('#checkout-form input[name="pago"]:checked')?.value;
+    box.classList.toggle("hidden", v !== "transferencia");
+  }
+
   function getCheckoutData() {
     const form = document.getElementById("checkout-form");
     const clientName = (form.clientName && form.clientName.value) ? form.clientName.value.trim() : "";
+    const clientPhone = form.clientPhone && form.clientPhone.value ? form.clientPhone.value.trim() : "";
     const entrega = form.querySelector('input[name="entrega"]:checked')?.value || "";
     const pago = form.querySelector('input[name="pago"]:checked')?.value || "";
     const cupon = (form.cupon && form.cupon.value) ? form.cupon.value.trim() : "";
     const direccion = form.direccion && form.direccion.value ? form.direccion.value.trim() : "";
     if (!clientName) {
       alert("Escribí tu nombre completo para continuar.");
+      return null;
+    }
+    if (!clientPhone) {
+      alert("Ingresá tu teléfono para coordinar el pedido.");
       return null;
     }
     if (!entrega) {
@@ -1483,6 +1852,7 @@
     }
     return {
       clientName,
+      clientPhone,
       entrega,
       pago,
       cupon,
@@ -1496,6 +1866,7 @@
     const shippingText = t.deliveryMethod === "retiro" ? "Sin cargo" : (t.isShippingFree ? "GRATIS" : formatMoney(t.shippingFee));
     const lines = [];
     lines.push(`Hola, soy ${checkout.clientName}. Quiero realizar el siguiente pedido.`);
+    lines.push(`*Teléfono / contacto:* ${checkout.clientPhone}`);
     lines.push("");
     if (forceReservaWhatsapp || !isKitchenOpen()) {
       lines.push("*" + RESERVA_WHATSAPP_TAG + "*");
@@ -1525,7 +1896,7 @@
     if (checkout.entrega === "domicilio") {
       lines.push(`*Dirección:* ${checkout.direccion}`);
     }
-    lines.push("*Pago:* " + (checkout.pago === "mercadopago" ? "Mercado Pago" : "Pago en el local"));
+    lines.push("*Método de pago elegido:* " + formatPagoLabelWhatsapp(checkout.pago));
     lines.push("*Cupón:* " + (checkout.cupon || "(ninguno)"));
     return lines.join("\n");
   }
@@ -1562,6 +1933,8 @@
   async function doSendWhatsapp() {
     const c = getCheckoutData();
     if (!c) return;
+    persistCustomerData(c);
+    saveLastOrderSnapshot();
     const waBtnSpinner = document.getElementById("btn-whatsapp-spinner");
     const reservaBtnSpinner = document.getElementById("btn-reservation-whatsapp-spinner");
     waBtnSpinner?.classList.remove("hidden");
@@ -1578,6 +1951,10 @@
     f.reset();
     document.getElementById("field-direccion").classList.add("hidden");
     document.getElementById("direccion").removeAttribute("required");
+    document.getElementById("field-transferencia")?.classList.add("hidden");
+    updateTransferenciaPanel();
+    restoreCustomerFromStorage({ showWelcome: false });
+    updateRepeatLastOrderUi();
     clearHoraReserva();
   }
 
@@ -1687,6 +2064,28 @@
       }
       renderCart();
     });
+  });
+
+  document.querySelectorAll('input[name="pago"]').forEach((radio) => {
+    radio.addEventListener("change", updateTransferenciaPanel);
+  });
+
+  document.getElementById("checkout-form").addEventListener("click", (e) => {
+    const btn = e.target.closest(".btn-copy-bank-data");
+    if (!btn) return;
+    const targetId = btn.getAttribute("data-copy-target");
+    const node = targetId ? document.getElementById(targetId) : null;
+    const text = node ? node.textContent.trim() : "";
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const prev = btn.textContent;
+      btn.textContent = "¡Listo!";
+      btn.classList.add("border-amicii-goldbright/70", "text-amicii-goldbright");
+      setTimeout(() => {
+        btn.textContent = prev;
+        btn.classList.remove("border-amicii-goldbright/70", "text-amicii-goldbright");
+      }, 1600);
+    }).catch(() => {});
   });
 
   document.getElementById("btn-checkout-cancel").addEventListener("click", () => {
@@ -1953,11 +2352,16 @@
   }
 
   window.addEventListener("load", () => {
+    restoreCustomerFromStorage({ showWelcome: true });
+    updateRepeatLastOrderUi();
     setInterval(function () {
       updateFomoBanner();
       updateReservaBlock();
     }, 1000);
-    setInterval(updateScheduleUI, 60000);
+    setInterval(() => {
+      updateScheduleUI();
+      updateHornoEstadoBanner();
+    }, 60000);
     setTimeout(() => {
       if (!window.__amiciiChatInit && !sessionStorage.getItem("amicii-chat-closed")) {
         showChat();
@@ -1966,11 +2370,16 @@
   });
 
   updateScheduleUI();
+  updateHornoEstadoBanner();
   updateFomoBanner();
   updateReservaBlock();
   renderGrids();
   updateBadges();
   renderCart();
+  updateRepeatLastOrderUi();
+  document.getElementById("btn-repeat-last-order")?.addEventListener("click", () => {
+    applyRepeatLastOrder();
+  });
 })();
   </script>
 </body>

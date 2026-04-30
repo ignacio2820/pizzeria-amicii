@@ -27,8 +27,8 @@
     };
 (function () {
   "use strict";
-  /** Carrito: localStorage */
-  const LS_KEY = "amicii-cart";
+  /** Carrito: sessionStorage (misma lógica que index.html) */
+  const SESSION_CART_KEY = "amicii-cart";
   const LS_HORA = "amicii-reserva-hora";
   const LS_CHAT_SEEN = "amicii-chat-seen";
   /** Código de país + número sin + ni 0 (ej. Argentina: 54 + sin 0 del área) */
@@ -263,7 +263,7 @@
 
   function loadCart() {
     try {
-      const raw = localStorage.getItem(LS_KEY);
+      const raw = sessionStorage.getItem(SESSION_CART_KEY);
       if (!raw) return [];
       const data = JSON.parse(raw);
       return Array.isArray(data) ? data : [];
@@ -273,7 +273,9 @@
   }
 
   function saveCart(items) {
-    localStorage.setItem(LS_KEY, JSON.stringify(items));
+    try {
+      sessionStorage.setItem(SESSION_CART_KEY, JSON.stringify(items));
+    } catch (e) {}
   }
 
   let cart = loadCart();
@@ -585,12 +587,18 @@
   function getCheckoutData() {
     const form = document.getElementById("checkout-form");
     const clientName = (form.clientName && form.clientName.value) ? form.clientName.value.trim() : "";
+    const clientPhone =
+      form.clientPhone && form.clientPhone.value ? form.clientPhone.value.trim() : "";
     const entrega = form.querySelector('input[name="entrega"]:checked')?.value || "";
     const pago = form.querySelector('input[name="pago"]:checked')?.value || "";
     const cupon = (form.cupon && form.cupon.value) ? form.cupon.value.trim() : "";
     const direccion = form.direccion && form.direccion.value ? form.direccion.value.trim() : "";
     if (!clientName) {
       alert("Escribí tu nombre completo para continuar.");
+      return null;
+    }
+    if (!clientPhone) {
+      alert("Ingresá tu teléfono para coordinar el pedido.");
       return null;
     }
     if (!entrega) {
@@ -618,6 +626,7 @@
     }
     return {
       clientName,
+      clientPhone,
       entrega,
       pago,
       cupon,
@@ -626,10 +635,18 @@
     };
   }
 
+  function formatPagoLabelWhatsapp(code) {
+    if (code === "efectivo") return "Efectivo (en local / delivery)";
+    if (code === "mercadopago") return "Mercado Pago (QR / link)";
+    if (code === "transferencia") return "Transferencia bancaria";
+    return code ? String(code) : "(no indicado)";
+  }
+
   function buildWhatsappText(checkout) {
     const t = computeTotals();
     const lines = [];
     lines.push(`Hola, soy ${checkout.clientName}. Quiero realizar el siguiente pedido.`);
+    lines.push(`*Teléfono / contacto:* ${checkout.clientPhone || ""}`);
     lines.push("");
     if (storeState.forceReservaWhatsapp || !storeState.isOpen) {
       lines.push("*" + RESERVA_WHATSAPP_TAG + "*");
@@ -658,7 +675,7 @@
     if (checkout.entrega === "domicilio") {
       lines.push(`*Dirección:* ${checkout.direccion}`);
     }
-    lines.push("*Pago:* " + (checkout.pago === "mercadopago" ? "Mercado Pago" : "Pago en el local"));
+    lines.push("*Método de pago elegido:* " + formatPagoLabelWhatsapp(checkout.pago));
     lines.push("*Cupón:* " + (checkout.cupon || "(ninguno)"));
     return lines.join("\n");
   }
